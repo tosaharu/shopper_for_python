@@ -3,7 +3,8 @@ version: "3.9"
 services:
   web:
     build: .
-    command: python ./shopper_for_python/manage.py runserver 0.0.0.0:8000
+    command: python ./shopper_for_python/manage.py 
+    
     volumes:
       - .:/code
     ports:
