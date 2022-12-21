@@ -1,0 +1,153 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'shopper/css/bootstrap.css' %}" />
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="{% static 'shopper/css/common.css' %}" />
+
+  {% comment %} ヘッダータイトルと、追加で必要なCSS等をExtend先で記載 {% endcomment %}
+  {% block extra_head %}{% endblock %}
+  
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'u_Main' %}">Shopper</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {% if request.session.user != null and not request.session.user.is_anonymous %}
+        {% comment %} ログインセッションがある場合 {% endcomment %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="navbar-text me-4">ようこそ{{request.session.user.name}}さん
+          </li>
+          <li class="nav-item"><a class="nav-link" aria-current="page"
+            href="{% url 'u_Main' %}">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" aria-current="page"
+            href="{% url 'u_ChangeInfo' %}">会員情報変更</a></li>
+          <li class="nav-item"><a class="nav-link"
+            href="{% url 'u_Logout' %}" tabindex="-1">ログアウト</a></li>
+        </ul>
+        <div class="navbar-text">選択中エリア：</div>
+          <form action="/shopper/U_HeaderAreaSetter" method="get">
+            <div class="d-flex">
+              <select id="header_region" class="form-select" name="header_region"
+                aria-label="Default select example"
+                onchange="CheckSelectedHeaderRegion(this)">
+                <option>地方</option>
+                {% for region in regions %}
+                <option value="{{region.id}}"
+                  {%if region.id == user.getRegion_id %}
+                  selected
+                  {% endif %}
+                  >
+                  {{region.name}}
+                </option>
+                {% endfor %}
+              </select>
+              <select id="header_prefecture" class="form-select"
+                name="header_prefecture" aria-label="Default select example"
+                disabled="disabled" onchange="CheckSelectedHeaderPrefecture(this)">
+                <option>都道府県</option>
+                {% for prefecture in prefectures %}
+                <option data-header_region_id="{{prefecture.getRegion_id}}"
+                  value="{{prefecture.getPrefecture_id}}"
+                  {%if prefecture.id == user.getPrefecture_id %}
+                  selected
+                  {% endif %}
+                  >
+                  {{prefecture.name}}
+                </option>
+                {% endfor %}
+              </select>
+              <select id="header_area" class="form-select" name="header_area"
+              aria-label="Default select example" disabled="disabled"
+              onchange="submit(this.form)">
+                <option>エリア</option>
+                {% for area in areas %}
+                <option data-header_prefecture_id="{{area.getPrefecture_id}}"
+                  value="{{area.id}}"
+                  {%if area.getArea_id == user.getArea_id%}
+                  selected
+                  {% endif %}
+                  >
+                  {{area.name}}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </form>
+        </div>
+        {% else %}
+        {% comment %} ログインセッションがない場合 {% endcomment %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active"
+            aria-current="page" href="{% url 'u_Main' %}">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link active"
+            href="{% url 'u_Login' %}" tabindex="-1">会員登録/ログイン</a></li>
+        </ul>
+        <div class="d-flex">
+          <select id="header_region" class="form-select"
+            aria-label="Default select example"
+            onchange="CheckSelectedHeaderRegion(this)">
+            <option selected=" selected">地方</option>
+            {% for region in regions %}
+            <option value="{{region.id}}">{{region.name}}</option>
+            {% endfor %}
+          </select> <select id="header_prefecture" class="form-select"
+            aria-label="Default select example" disabled="disabled"
+            onchange="CheckSelectedHeaderPrefecture(this)">
+            <option selected="selected">都道府県</option>
+            {% for prefecture in prefectures %}
+            <option data-header_region_id="{{prefecture.region}}"
+              value="{{prefecture.id}}">{{prefecture.name}}</option>
+            {% endfor %}
+          </select> <select id="header_area" class="form-select"
+            aria-label="Default select example" name="area" disabled="disabled">
+            <option selected=" selected">エリア</option>
+            {% for area in areas %}
+            <option data-header_prefecture_id="{{area.prefecture}}"
+              value="{{area.id}}">{{area.name}}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+        <!-- エリアを変更した時点で、formをpostし、セッションを更新して同ページを再呼び出ししたい -->
+        <!-- 使いまわしているヘッダーから、各ページに対応するサーブレットを呼び出すのはどのようにするのがいいか -->
+      </div>
+    </div>
+  </nav>
+
+
+  {% comment %} HTMLの中身をExtend {% endcomment %}
+  {% block content %}{% endblock %}
+
+  <!-- Bootstrap -->
+  <script type="text/javascript" src="{% static 'shopper/js/bootstrap.js' %}"></script>
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- アプリ内で使用する汎用js -->
+  <script type="text/javascript" src="{% static 'shopper/js/common.js' %}"></script>
+
+  {% comment %} 追加で必要なCJavaScript等をExtend先で記載 {% endcomment %}
+  {% block extra_JS %}{% endblock %}
+</body>
+
+</html>

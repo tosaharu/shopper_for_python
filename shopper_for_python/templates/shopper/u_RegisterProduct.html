@@ -1,0 +1,298 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+{% block extra_head %}
+  <title>商品登録</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container" style="max-width: 720px;">
+    <div class="d-flex flex-column justify-content-center align-items-center mx-auto">
+      <br>
+      <h2>商品投稿</h2>
+      <br>
+      {% if errorMsg != null %}
+        <p>{{errorMsg}}</p>
+      {% endif %}
+      <form action="{% url 'u_RegisterProduct' %}" method="post" id="main_form">
+        {% csrf_token %}
+        <div class="row mb-2">
+          <label for="date" class="form-label">購入日</label>
+          <div class="col" id="date_outline" style="max-width: 160px;">
+            <input class="form-control" type="date" name="date" id="date" required="required">
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">日付を入力してください</div>
+          </div>
+          <div class="col">
+            <button type="button" onclick="today_select()" class="btn btn-outline-primary col mx-2">今日の日付</button>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="areas" class="form-label">購入エリア</label>
+          <div class="col-sm" id="region_outline">
+            <select id="region" class="form-select" aria-label="Default select example" onchange="CheckSelectedRegion(this)" required="required">
+              <option value="" selected="selected">地方を選択してください</option>
+              {% for region in regions %}
+                <option value="{{region.id}}">{{region.name}}</option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
+          </div>
+          <div class="col-sm" id="prefecture_outline">
+            <select id="prefecture" class="form-select" aria-label="Default select example" onchange="CheckSelectedPrefecture(this)" required="required">
+              <option value="" selected="selected">都道府県を選択してください</option>
+              {% for prefecture in prefectures %}
+                <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}">{{prefecture.name}}</option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">都道府県を入力してください</div>
+          </div>
+          <div class="col-sm" id="area_outline">
+            <select id="area" class="form-select" aria-label="Default select example" name="area" onchange="CheckSelectedArea(this)" required="required">
+              <option value="" selected="selected">エリアを選択してください</option>
+              {% for area in areas %}
+                <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}">{{area.name}}
+                </option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">エリアを入力してください</div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col col-sm-4" id="store_outline">
+            <select id="store" name="store" class="form-select" aria-label="Default select example" required="required">
+              <option value="">店舗を選択してください</option>
+              {% for store in store_list %}
+                <option data-area_id="{{store.area}}" value="{{store.id}}">
+                  {{store.name}}
+                </option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">店舗を入力してください</div>
+          </div>
+          <div class="col col-sm-8">
+            <button type="button" id="subm2" class="btn btn-outline-primary col mx-2" data-bs-toggle="modal" data-bs-target="#modal">新規登録</button>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="category" class="form-label">品目</label>
+          <div class="col-sm" id="mainitem_outline">
+            <select id="mainitem" class="form-select" aria-label="Default select example" name="mainitem" onchange="CheckSelectedMainItem(this)" required="required">
+              <option value="">大品目を選択してください</option>
+              {% for main_item in main_item_list %}
+                <option value="{{main_item.id}}">
+                  {{main_item.name}}
+                </option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">大品目を入力してください</div>
+          </div>
+          <div class="col-sm" id="subitem_outline">
+            <select id="subitem" class="form-select" aria-label="Default select example" name="subitem" onchange="CheckSelectedSubItem(this)" disabled="disabled" required="required">
+              <option value="">中品目を選択してください</option>
+              {% for sub_item in sub_item_list %}
+                <option value="{{sub_item.id}}">
+                  {{sub_item.name}}
+                </option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">中品目を入力してください</div>
+          </div>
+          <div class="col-sm" id="item_outline">
+            <select id="item" class="form-select" aria-label="Default select example" name="item" disabled="disabled" required="required">
+              <option value="">小品目を選択してください</option>
+              {% for item in item_list %}
+                <option value="{{item.id}}">
+                  {{item.name}}
+                </option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">小品目を入力してください</div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="detail" class="form-label">商品名</label>
+          <div class="col" id="detail_outline">
+            <input type="text" id="detail" class="form-control" name="detail" placeholder="例：カルビーポテトチップスうすしお" required="required">
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">商品名を入力してください</div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="price" class="form-label">価格、数量、割引有無</label>
+
+          <div class="col-sm" id="price_outline">
+            <input type="number" id="price" class="form-control" name="price" placeholder="例：85円の場合「85」" min="1" required="required">
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">価格を入力してください</div>
+          </div>
+
+          <div class="col-sm" id="amount_outline">
+            <input type="number" id="amount" class="form-control" name="amount" placeholder="例：60gの場合「60」" min="1" required="required">
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">数量を入力してください</div>
+          </div>
+          <div class="col-sm" id="discount_outline">
+            <select name="discount" id="discount" class="form-select" required="required">
+              <option value="">割引の有無を選択してください</option>
+              <option value="0">割引なし</option>
+              <option value="1">割引あり</option>
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">割引の有無を入力してください</div>
+          </div>
+        </div>
+        <div class="row mb-2" id="comment_outline">
+          <label for="comment" class="form-label">メモ</label>
+
+          <div class="col">
+            <input type="text" id="comment" class="form-control" name="comment" placeholder="例：お店のクーポンを使用して15%引きで購入しました" required="required">
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">メモを入力してください</div>
+          </div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <button type="button" class="btn btn-secondary col-3 mx-2" onclick="history.back(-1);return false;">戻る</button>
+          <button type="submit" name="" id="subm1" class="btn btn-primary col-3 mx-2" disabled="disabled">登録</button>
+        </div>
+      </form>
+    </div>
+    <!-- RegisterStoreInfoModal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="sub_form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">店舗情報新規登録</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-2">
+                <label for="detail" class="form-label">
+                  店舗名
+                </label>
+                <div class="col" id="store_name_outline">
+                  <input type="text" class="form-control" id="store_name" name="store_name" placeholder="店舗名を入力してください" required="required">
+                  <div id="validationServerUsernameFeedback" class="invalid-feedback">店舗名を入力してください</div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <label for="areas" class="form-label">店舗のエリア</label>
+
+                <div class="col" id="store_region_outline">
+                  <select id="store_region" name="store_region" class="form-select" aria-label="Default select example" onchange="CheckSelectedRegion(this)" required="required">
+                    <option value="" selected="selected">地方を選択してください</option>
+                    {% for region in regions %}
+                      <option value="{{region.id}}">{{region.name}}</option>
+                    {% endfor %}
+                  </select>
+                  <div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
+                </div>
+                <div class="col" id="store_prefecture_outline">
+                  <select id="store_prefecture" name="store_prefecture" class="form-select" aria-label="Default select example" onchange="CheckSelectedPrefecture(this)" required="required">
+                    <option value="" selected="selected">都道府県を選択してください</option>
+                    {% for prefecture in prefectures %}
+                      <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}">{{prefecture.name}}</option>
+                    {% endfor %}
+                  </select>
+                  <div id="validationServerUsernameFeedback" class="invalid-feedback">都道府県を入力してください</div>
+                </div>
+                <div class="col" id="store_area_outline">
+                  <select id="store_area" name="store_area" class="form-select" aria-label="Default select example" required="required">
+                    <option value="" selected="selected">エリアを選択してください</option>
+                    {% for area in areas %}
+                      <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}">{{area.name}}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <div id="validationServerUsernameFeedback" class="invalid-feedback">エリアを入力してください</div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <label class="form-label">
+                  詳細住所
+                </label>
+
+                <div class="col" id="store_address_outline">
+                  <input type="text" class="form-control" id="store_address" name="store_address" placeholder="詳細住所を都道府県から入力してください" required="required">
+                  <div id="validationServerUsernameFeedback" class="invalid-feedback">詳細住所を入力してください</div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <label class="form-label">
+                  営業時間
+                </label>
+
+                <div class="row mb-2">
+
+                  <div class="col" id="store_start_hour_outline">
+                    <input type="time" class="form-control" id="store_start_hour" name="store_start_hour">
+                  </div>
+                  ～
+                  <div class="col" id="store_end_hour_outline">
+                    <input type="time" class="form-control" id="store_end_hour" name="store_end_hour">
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <label for="detail" class="form-label">
+                  HP(URL)
+                </label>
+                <div class="col" id="store_URL_outline">
+                  <input type="url" class="form-control" id="store_URL" name="store_URL" placeholder="URLを入力してください">
+                  <div id="validationServerUsernameFeedback" class="invalid-feedback">URLを入力してください</div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <label for="detail" class="form-label">
+                  電話番号
+                </label>
+                <div class="col" id="store_tel_outline">
+                  <input type="tel" class="form-control" id="store_tel" name="store_tel" placeholder="電話番号をハイフン(-)なしで入力してください">
+                  <div id="validationServerUsernameFeedback" class="invalid-feedback">電話番号を入力してください</div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <label for="detail" class="form-label">
+                  支払方法
+                </label>
+                <div class="col" id="store_payment_outline">
+                  <input type="text" class="form-control" id="store_payment" name="store_payment" placeholder="現金/クレジット/各種電子決済 など入力してください">
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <label for="detail" class="form-label">
+                  施設情報
+                </label>
+                <div class="col" id="store_facility_outline">
+                  <input type="text" class="form-control" id="store_facility" name="store_facility" placeholder="喫煙室/サービスカウンター/地下駐車場/お手洗いの有無 など入力してください">
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <label for="detail" class="form-label">
+                  実施サービス
+                </label>
+                <div class="col" id="store_service_outline">
+                  <input type="text" class="form-control" id="store_service" name="store_service" placeholder="試食会/レシピ説明会/各種イベント など入力してください">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+              <button type="button" class="btn btn-primary" id="subm3" disabled="disabled">登録</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_JS %}
+  <script type="text/javascript" src="{% static 'shopper/js/register_product.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/validation.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/validation_forRegisterProduct.js' %}"></script>
+{% endblock %}

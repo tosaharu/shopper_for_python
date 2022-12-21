@@ -1,0 +1,145 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+{% block extra_head %}
+  <title>メインページ</title>
+  <!-- メイン画面用CSS -->
+  <link rel="stylesheet" href="{% static 'shopper/css/u_main.css' %}"/>
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-center align-items-center"></div>
+
+  <div class="container">
+    <div class="">
+      <br>
+      <h2>商品情報を登録・チェック</h2>
+      <br>
+      <form action="U_RegisterItem" method="get">
+        <div class="row justify-content-start">
+          <a type="submit" class="btn btn-primary col-3 mx-2" href="{% url 'u_RegisterProduct' %}">商品登録</a>
+          {% comment %} <button type="button" class="btn btn-light col-3 mx-2" value="商品検索">検索する</button>
+          <button type="button" class="btn btn-light col-3 mx-2" onclick="location.href='/shopper/CouponListS'">クーポン</button> {% endcomment %}
+        </div>
+      </form>
+      <br>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="mylist-tab" data-bs-toggle="tab" data-bs-target="#mylist" type="button" role="tab" aria-controls="mylist" aria-selected="true">
+            最安情報</button>
+          <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">登録履歴</button>
+          <button class="nav-link" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">お気に入り</button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active overflow-auto my-1" id="mylist" role="tabpanel" aria-labelledby="mylist-tab">
+          {% if user_categorized_product_lists != null and user_categorized_product_lists|length != 0 %}
+            <ul>
+              <!-- 品目ごとのブロック -->
+              {% for user_categorized_product_list in user_categorized_product_lists %}
+              <li class="card mb-1">
+                  <div class="card-body overflow-auto">
+                    <h5 class="card-title">{{user_categorized_product_list.0.item.name}}</h5>
+                    <div class="row mb-1 flex-nowrap">
+                      <div class="list-header col-2 col-lg-1">価格</div>
+                      <div class="list-header col-3 col-lg-2">商品詳細</div>
+                      <div class="list-header col-2 col-lg-1">ユーザー</div>
+                      <div class="list-header col-3 col-lg-2">店舗</div>
+                      <div class="list-header col-3 col-lg-2">日付</div>
+                      <div class="list-header col-2 col-lg-1">割引</div>
+                      <div class="list-header col-4 col-lg-3">コメント</div>
+                    </div>
+                    <!-- 自分の投稿情報のブロック -->
+                    {% for user_categorized_product in user_categorized_product_list %}
+                    <div class="self row mb-1 flex-nowrap">
+                      <div class="col-2 col-lg-1 price card-text p-2"><span>{{user_categorized_product.price}}</span>円</div>
+                      <div class="col-3 col-lg-2 card-text p-2">{{user_categorized_product.detail}}</div>
+                      <div class="col-2 col-lg-1 card-text p-2">あなた</div>
+                      <div class="col-3 col-lg-2 store card-text p-2">
+                        <a href="/shopper/u_StoreInfo/{{user_categorized_product.store.id}}">
+                          {{user_categorized_product.store.name}}
+                        </a>
+                      </div>
+                      <div class="col-3 col-lg-2 date card-text p-2">{{user_categorized_product.date}}</div>
+                      <div class="col-2 col-lg-1 card-text p-2">{{user_categorized_product.discount}}</div>
+                      <div class="col-4 col-lg-3 card-text p-2">{{user_categorized_product.comment}}</div>
+                    </div>
+                    {% endfor %}
+                    <!-- 他ユーザーの投稿情報の存在確認＆品目合わせ -->
+                    {% if other_categorized_product_lists != null and other_categorized_product_lists|length != 0 %}
+                      {% for other_categorized_product_list in other_categorized_product_lists %}
+                      {% if other_categorized_product_list.0.item == user_categorized_product_list.0.item %}
+                          <!-- 他ユーザーの投稿情報のブロック -->
+                          {% for other_categorized_product in other_categorized_product_list %}
+                          <div class="other row mb-1 flex-nowrap">
+                            <div class="col-2 col-lg-1 price card-text p-2"><span>{{other_categorized_product.price}}</span>円</div>
+                              <div class="col-3 col-lg-2 card-text p-2">{{other_categorized_product.detail}}</div>
+                              <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.user.name}}</div>
+                              <div class="col-3 col-lg-2 store card-text p-2">
+                                <a href="/shopper/u_StoreInfo/{{other_categorized_product.store.id}}">
+                                  {{other_categorized_product.store.name}}
+                                </a>
+                              </div>
+                              <div class="col-3 col-lg-2 date card-text p-2">{{other_categorized_product.date}}</div>
+                              <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.discount}}</div>
+                              <div class="col-4 col-lg-3 card-text p-2">{{other_categorized_product.comment}}</div>
+                            </div>
+                          {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                    <div id="no_data">他ユーザーの投稿情報がありません</div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+            {% else%}
+            <div class="my-5">
+              <p>まだ商品の投稿がありません</p>
+              <p>購入した商品の情報を登録しましょう</p>
+            </div>
+          {% endif %}
+          <!--検討中、最低限品目ごとにリストを表示。可能であれば品目ごとの最安値を表示しつつ、最安意外を折りたたんで下に表示-->
+        </div>
+        <div class="tab-pane fade overflow-auto my-1" id="history" role="tabpanel" aria-labelledby="history-tab">
+          {% if user_product_list != null and user_product_list|length != 0 %}
+          <div class="card">
+            <div class="card-body mb-1 overflow-auto">  
+              <div class="row mb-1 flex-nowrap">
+                <div class="list-header col-3 col-lg-2">日付</div>
+                <div class="list-header col-2 col-lg-1">価格</div>
+                <div class="list-header col-3 col-lg-2">商品詳細</div>
+                <div class="list-header col-3 col-lg-2">店舗</div>
+                <div class="list-header col-2 col-lg-1">割引</div>
+                <div class="list-header col-4 col-lg-4">コメント</div>
+              </div>
+              {% for user_product in user_product_list %}
+              <div class="self row mb-1 flex-nowrap">
+                <div class="col-3 col-lg-2 card-text p-2">{{user_product.date}}</div>
+                <div class="col-2 col-lg-1 price card-text p-2"><span>{{user_product.price}}</span>円</div>
+                <div class="col-3 col-lg-2 card-text p-2">{{user_product.detail}}</div>
+                <div class="col-3 col-lg-2 store card-text p-2">
+                  <a href="/shopper/u_StoreInfo/{{user_product.store.id}}">
+                    {{user_product.store.name}}
+                  </a>
+                </div>
+                <div class="col-2 col-lg-1 card-text p-2">{{user_product.discount}}</div>
+                <div class="col-4 col-lg-4 card-text p-2">{{user_product.comment}}</div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+              <div class="my-5">
+                <p>まだ商品の投稿がありません</p>
+                <p>購入した商品の情報を登録しましょう</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_JS %}
+  <script type="text/javascript" src="{% static 'shopper/js/main.js' %}"></script>
+{% endblock %}
