@@ -5,34 +5,97 @@
   <title>メインページ</title>
   <!-- メイン画面用CSS -->
   <link rel="stylesheet" href="{% static 'shopper/css/u_main.css' %}"/>
-{% endblock %}
-
+  {% endblock %}
+  
 {% block content %}
-  <div class="d-flex justify-content-center align-items-center"></div>
+<div class="d-flex justify-content-center align-items-center"></div>
 
   <div class="container">
     <div class="">
       <br>
       <h2>商品情報を登録・チェック</h2>
-      <br>
-      <form action="U_RegisterItem" method="get">
-        <div class="row justify-content-start">
-          <a type="submit" class="btn btn-primary col-3 mx-2" href="{% url 'u_RegisterProduct' %}">商品登録</a>
+      <form>
+        <div class="row justify-content-start my-4">
+          <a type="button" class="btn btn-primary col-3 col-sm-2 mx-2" href="{% url 'u_RegisterProduct' %}">商品登録</a>
           {% comment %} <button type="button" class="btn btn-light col-3 mx-2" value="商品検索">検索する</button>
           <button type="button" class="btn btn-light col-3 mx-2" onclick="location.href='/shopper/CouponListS'">クーポン</button> {% endcomment %}
+      
         </div>
       </form>
-      <br>
+      <form>
+        <div class="row my-2">
+          <div class="col-3">
+            <select id="header_region" class="form-select" name="header_region"
+              aria-label="Default select example">
+              <option>地方</option>
+              {% for region in regions %}
+              <option value="{{region.id}}"
+                {%if region.id == request.session.tmp_area.prefecture.region.id %}
+                selected
+                {% endif %}
+                >
+                {{region.name}}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-3">
+            <select id="header_prefecture" class="form-select"
+              name="header_prefecture" aria-label="Default select example"
+              disabled="disabled">
+              <option>都道府県</option>
+              {% for prefecture in prefectures %}
+              <option data-header_region_id="{{prefecture.region.id}}"
+                value="{{prefecture.id}}"
+                {%if prefecture.id == request.session.tmp_area.prefecture.id %}
+                selected
+                {% endif %}
+                >
+                {{prefecture.name}}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="ms-parent" style="width:100%;">
+              <button id="msbtn" type="button" class="ms-choice form-select"><span></span></button>
+              <div class="ms-drop bottom">
+                <ul class="row" style="max-height: 250px;">
+                  {% comment %} {% for area in areas %}
+                  {% if area.prefecture.id == request.session.tmp_area.prefecture.id %} 
+                  <li class="col-sm-6 col-xl-4 area_selection" onclick="ShowSelectedArea() ">
+                    <label>
+                      <input name="header_area" type="checkbox" value="{{area.id}}"
+                      {%if area.id == request.session.tmp_area.id%}
+                      checked
+                      {% endif %}
+                      ><span>{{area.name}}</span>
+                    </label>
+                  </li>
+                  {% endif %}
+                  {% endfor %} {% endcomment %}
+                  {% include 'shopper/u_MainAreaSelection.html' %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row my-2">
+          <a id="reload_selection" type="button" class="btn btn-primary col-3 col-sm-2 mx-2" onclick="GetAreaProduct()">エリア選択</a>
+        </div>
+      </form>
+    </div>
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="mylist-tab" data-bs-toggle="tab" data-bs-target="#mylist" type="button" role="tab" aria-controls="mylist" aria-selected="true">
             最安情報</button>
           <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">登録履歴</button>
-          <button class="nav-link" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">お気に入り</button>
+          {% comment %} <button class="nav-link" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">お気に入り</button> {% endcomment %}
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active overflow-auto my-1" id="mylist" role="tabpanel" aria-labelledby="mylist-tab">
+          <!-- エリア選択時にはajaxで以下のブロックを全て入れ替える-->
           {% if user_categorized_product_lists != null and user_categorized_product_lists|length != 0 %}
             <ul>
               <!-- 品目ごとのブロック -->
@@ -65,9 +128,10 @@
                       <div class="col-4 col-lg-3 card-text p-2">{{user_categorized_product.comment}}</div>
                     </div>
                     {% endfor %}
-                    <!-- 他ユーザーの投稿情報の存在確認＆品目合わせ -->
+                    <!-- 他ユーザーの投稿情報の存在確認 -->
                     {% if other_categorized_product_lists != null and other_categorized_product_lists|length != 0 %}
                       {% for other_categorized_product_list in other_categorized_product_lists %}
+                      <!-- 品目が合致するリストを抽出-->
                       {% if other_categorized_product_list.0.item == user_categorized_product_list.0.item %}
                           <!-- 他ユーザーの投稿情報のブロック -->
                           {% for other_categorized_product in other_categorized_product_list %}
@@ -143,3 +207,5 @@
 {% block extra_JS %}
   <script type="text/javascript" src="{% static 'shopper/js/main.js' %}"></script>
 {% endblock %}
+
+

@@ -62,15 +62,15 @@
           <div class="form-outline col-lg-7">
             <label for="exampleInputEmail1" class="form-label">生年月日</label>
             <div class="row">
-              <div class="col-sm" id="year-select_outline">
+              <div class="col" id="year-select_outline">
                 <select id="year-select" class="form-select" aria-label="Default select example" name="year" required="required" onchange="CheckSelectedMonth()"></select>
                 <div id="validationServerUsernameFeedback" class="invalid-feedback">年を入力してください</div>
               </div>
-              <div class="col-sm" id="month-select_outline">
+              <div class="col" id="month-select_outline">
                 <select id="month-select" class="form-select" aria-label="Default select example" name="month" required="required" onchange="CheckSelectedMonth()"></select>
                 <div id="validationServerUsernameFeedback" class="invalid-feedback">月を入力してください</div>
               </div>
-              <div class="col-sm" id="day-select_outline">
+              <div class="col" id="day-select_outline">
                 <select id="day-select" class="form-select" aria-label="Default select example" name="day" required="required"></select>
                 <div id="validationServerUsernameFeedback" class="invalid-feedback">日を入力してください</div>
               </div>
@@ -157,9 +157,9 @@
                 </table>
 
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                <button type="submit" class="btn btn-primary">登録</button>
+              <div class="modal-footer row justify-content-center">
+                <button type="button" class="btn btn-secondary col-3 mx-2" data-bs-dismiss="modal">閉じる</button>
+                <button type="submit" class="btn btn-primary col-3 mx-2">登録</button>
               </div>
             </div>
           </div>
@@ -171,7 +171,8 @@
 {% endblock %}
 
 {% block extra_JS %}
-  <script type="text/javascript" src="{% static 'shopper/js/additional.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/area.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/registerUser.js' %}"></script>
   <script type="text/javascript" src="{% static 'shopper/js/validation.js' %}"></script>
-  <script type="text/javascript" src="{% static 'shopper/js/validation_forNewRegister.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/validation_forRegisterUser.js' %}"></script>
 {% endblock %}

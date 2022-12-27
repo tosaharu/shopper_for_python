@@ -32,7 +32,7 @@
             <select id="region" class="form-select" aria-label="Default select example" onchange="CheckSelectedRegion(this)" required="required">
               <option value="" selected="selected">地方を選択してください</option>
               {% for region in regions %}
-                <option value="{{region.id}}">{{region.name}}</option>
+                <option value="{{region.id}}" {% if region.id == request.session.user.area.prefecture.region.id  %} selected="selected" {% endif %}>{{region.name}}</option>
               {% endfor %}
             </select>
             <div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
@@ -41,7 +41,7 @@
             <select id="prefecture" class="form-select" aria-label="Default select example" onchange="CheckSelectedPrefecture(this)" required="required">
               <option value="" selected="selected">都道府県を選択してください</option>
               {% for prefecture in prefectures %}
-                <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}">{{prefecture.name}}</option>
+                <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}" {% if prefecture.id == request.session.user.area.prefecture.id  %} selected="selected" {% endif %}>{{prefecture.name}}</option>
               {% endfor %}
             </select>
             <div id="validationServerUsernameFeedback" class="invalid-feedback">都道府県を入力してください</div>
@@ -50,7 +50,7 @@
             <select id="area" class="form-select" aria-label="Default select example" name="area" onchange="CheckSelectedArea(this)" required="required">
               <option value="" selected="selected">エリアを選択してください</option>
               {% for area in areas %}
-                <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}">{{area.name}}
+                <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}" {% if area.id == request.session.user.area.id  %} selected="selected" {% endif %}>{{area.name}}
                 </option>
               {% endfor %}
             </select>
@@ -90,7 +90,7 @@
             <select id="subitem" class="form-select" aria-label="Default select example" name="subitem" onchange="CheckSelectedSubItem(this)" disabled="disabled" required="required">
               <option value="">中品目を選択してください</option>
               {% for sub_item in sub_item_list %}
-                <option value="{{sub_item.id}}">
+                <option data-main_item_id="{{sub_item.main_item.id}}" value="{{sub_item.id}}">
                   {{sub_item.name}}
                 </option>
               {% endfor %}
@@ -101,7 +101,7 @@
             <select id="item" class="form-select" aria-label="Default select example" name="item" disabled="disabled" required="required">
               <option value="">小品目を選択してください</option>
               {% for item in item_list %}
-                <option value="{{item.id}}">
+                <option data-sub_item_id="{{item.sub_item.id}}" value="{{item.id}}">
                   {{item.name}}
                 </option>
               {% endfor %}
@@ -292,7 +292,8 @@
 {% endblock %}
 
 {% block extra_JS %}
-  <script type="text/javascript" src="{% static 'shopper/js/register_product.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/area.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/registerProduct.js' %}"></script>
   <script type="text/javascript" src="{% static 'shopper/js/validation.js' %}"></script>
   <script type="text/javascript" src="{% static 'shopper/js/validation_forRegisterProduct.js' %}"></script>
 {% endblock %}

@@ -122,9 +122,9 @@ function activateExistingMailValidation(outline_id, input_id, form_id, button_id
 
 	input.addEventListener('blur', function () {
 		$.ajax({
-			url: "Ajax_CheckUserMail",
+			url: "Ajax_CheckUserMail/",
 			type: "GET",
-			data: { mail: $('#email').val() }
+			data: { email: $('#email').val() }
 		}).done(function (result) {
 			//通信成功時のコールバック
 			let checkMail = Number(result);
@@ -151,3 +151,4 @@ function activateExistingMailValidation(outline_id, input_id, form_id, button_id
 
 	}, false)
 }
+

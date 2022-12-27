@@ -18,14 +18,20 @@ from . import views
 
 # JavaEEでいうサーブレット1行目、@WebServletの役割
 urlpatterns = [
-    # path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
+
     path('u_Login/', views.U_LoginView.as_view(), name='u_Login'),
     path('u_Logout/', views.U_LogoutView.as_view(), name='u_Logout'),
 
     path('u_Main/', views.U_MainView.as_view(), name='u_Main'),
+    path('u_Main/Ajax_GetArea/', views.Ajax_GetArea.as_view(), name='Ajax_GetArea'),
+    path('u_Main/Ajax_GetAreaProduct/',
+         views.Ajax_GetAreaProduct.as_view(), name='Ajax_GetAreaProduct'),
 
     path('u_RegisterUser/', views.U_RegisterUserView.as_view(),
          name='u_RegisterUser'),
+    path('u_RegisterUser/Ajax_CheckUserMail/', views.Ajax_CheckUserMail.as_view(),
+         name='u_RegisterUser_Ajax_CheckUserMail'),
 
     path('u_Quit/', views.U_QuitView.as_view(), name='u_Quit'),
 
@@ -40,6 +46,8 @@ urlpatterns = [
     path('u_ChangeInfo/', views.U_ChangeInfoView.as_view(), name='u_ChangeInfo'),
     path('u_ChangeInfo/Ajax_GetUserBirthday/',
          views.Ajax_GetUserBirthday.as_view(), name='Ajax_GetUserBirthday'),
+    path('u_ChangeInfo/Ajax_CheckUserMail/', views.Ajax_CheckUserMail.as_view(),
+         name='u_ChangeInfo_Ajax_CheckUserMail'),
     path('u_ChangeInfo/Ajax_ChangeUserInfo/',
          views.Ajax_ChangeUserInfo.as_view(), name='Ajax_ChangeUserInfo'),
     path('u_ChangeInfo/Ajax_ChangeUserPassword/',

@@ -21,8 +21,8 @@ COPY ./dbconfig/my.conf /etc/mysql/conf.d/my.cnf
 # コンテナ起動
 # docker run --name docker-mysql-8-0-3 -d -v $PWD/db-8-0-3:/var/lib/mysql -p 3307:3307 docker-mysql-8-0-3:1
 
-# ログイン
-# docker exec -it docker-mysql-8-0-3 bash
+# コンテナにログイン
+# docker exec -it db bash
 
 # mysqlログイン
 # mysql -u root -p
@@ -30,13 +30,11 @@ COPY ./dbconfig/my.conf /etc/mysql/conf.d/my.cnf
 
 # sqlファイルをdump（hostの部分は、コンテナからローカルのアクセスが不明だったので、いったんローカルで実行して出力したファイルをGUI経由で使用）
 # mysqldump -u root -p -h localhost default-character-set=utf8 shopper > shopper.sql
+# mysqldump -u root -p -h localhost shopper > shopper.sql
 # 'DESKTOP-MCVAAT0'
 
 # sqlファイルをコンテナのtmpに格納
 # docker cp ./SJISshopper.sql docker-mysql-8-0-3:/tmp/
-
-# コンテナにログイン
-# docker exec -it docker-mysql-8-0-3 bash
 
 # sqlファイル実行
 # mysql -u testuser -p test < tmp/{プロジェクト名 + 日付}.sql
