@@ -9,7 +9,8 @@ from random import randint
 def get_area_contexts(context):
     context['regions'] = Region.objects.all()
     context['prefectures'] = Prefecture.objects.all()
-    context['areas'] = Area.objects.all()
+    # djangoの全件取得は件数が多いとかなり重いので避ける
+    # context['areas'] = Area.objects.all()
 
 # 年月日をDate型に変換する
 

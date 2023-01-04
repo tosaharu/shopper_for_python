@@ -29,7 +29,7 @@
         <div class="row mb-2">
           <label for="areas" class="form-label">購入エリア</label>
           <div class="col-sm" id="region_outline">
-            <select id="region" class="form-select" aria-label="Default select example" onchange="CheckSelectedRegion(this)" required="required">
+            <select id="region" class="form-select" aria-label="Default select example" required="required">
               <option value="" selected="selected">地方を選択してください</option>
               {% for region in regions %}
                 <option value="{{region.id}}" {% if region.id == request.session.user.area.prefecture.region.id  %} selected="selected" {% endif %}>{{region.name}}</option>
@@ -38,7 +38,7 @@
             <div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
           </div>
           <div class="col-sm" id="prefecture_outline">
-            <select id="prefecture" class="form-select" aria-label="Default select example" onchange="CheckSelectedPrefecture(this)" required="required">
+            <select id="prefecture" class="form-select" aria-label="Default select example" required="required">
               <option value="" selected="selected">都道府県を選択してください</option>
               {% for prefecture in prefectures %}
                 <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}" {% if prefecture.id == request.session.user.area.prefecture.id  %} selected="selected" {% endif %}>{{prefecture.name}}</option>
@@ -47,12 +47,16 @@
             <div id="validationServerUsernameFeedback" class="invalid-feedback">都道府県を入力してください</div>
           </div>
           <div class="col-sm" id="area_outline">
-            <select id="area" class="form-select" aria-label="Default select example" name="area" onchange="CheckSelectedArea(this)" required="required">
+            <select id="area" class="form-select" aria-label="Default select example" name="area" required="required">
               <option value="" selected="selected">エリアを選択してください</option>
-              {% for area in areas %}
-                <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}" {% if area.id == request.session.user.area.id  %} selected="selected" {% endif %}>{{area.name}}
+              {% for selected_prefecture_area in selected_prefecture_areas %}
+                <option value="{{selected_prefecture_area.id}}" {% if selected_prefecture_area.id == request.session.user.area.id  %} selected="selected" {% endif %}>{{selected_prefecture_area.name}}
                 </option>
               {% endfor %}
+              {% comment %}全件取得する旧バージョン {% for area in areas %}
+                <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}" {% if area.id == request.session.user.area.id  %} selected="selected" {% endif %}>{{area.name}}
+                </option>
+              {% endfor %} {% endcomment %}
             </select>
             <div id="validationServerUsernameFeedback" class="invalid-feedback">エリアを入力してください</div>
           </div>
@@ -61,11 +65,16 @@
           <div class="col col-sm-4" id="store_outline">
             <select id="store" name="store" class="form-select" aria-label="Default select example" required="required">
               <option value="">店舗を選択してください</option>
-              {% for store in store_list %}
+              {% for selected_area_store in selected_area_stores %}
+                <option value="{{selected_area_store.id}}">
+                  {{selected_area_store.name}}
+                </option>
+              {% endfor %}
+              {% comment %}全件取得する旧バージョン {% for store in store_list %}
                 <option data-area_id="{{store.area}}" value="{{store.id}}">
                   {{store.name}}
                 </option>
-              {% endfor %}
+              {% endfor %} {% endcomment %}
             </select>
             <div id="validationServerUsernameFeedback" class="invalid-feedback">店舗を入力してください</div>
           </div>
@@ -176,7 +185,7 @@
                 <label for="areas" class="form-label">店舗のエリア</label>
 
                 <div class="col" id="store_region_outline">
-                  <select id="store_region" name="store_region" class="form-select" aria-label="Default select example" onchange="CheckSelectedRegion(this)" required="required">
+                  <select id="store_region" name="store_region" class="form-select" aria-label="Default select example" required="required">
                     <option value="" selected="selected">地方を選択してください</option>
                     {% for region in regions %}
                       <option value="{{region.id}}">{{region.name}}</option>
@@ -185,7 +194,7 @@
                   <div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
                 </div>
                 <div class="col" id="store_prefecture_outline">
-                  <select id="store_prefecture" name="store_prefecture" class="form-select" aria-label="Default select example" onchange="CheckSelectedPrefecture(this)" required="required">
+                  <select id="store_prefecture" name="store_prefecture" class="form-select" aria-label="Default select example" required="required">
                     <option value="" selected="selected">都道府県を選択してください</option>
                     {% for prefecture in prefectures %}
                       <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}">{{prefecture.name}}</option>
@@ -196,10 +205,13 @@
                 <div class="col" id="store_area_outline">
                   <select id="store_area" name="store_area" class="form-select" aria-label="Default select example" required="required">
                     <option value="" selected="selected">エリアを選択してください</option>
-                    {% for area in areas %}
+                    {% for selected_prefecture_area in selected_prefecture_areas %}
+                      <option value="{{selected_prefecture_area.id}}">{{selected_prefecture_area.name}}</option>
+                    {% endfor %}
+                    {% comment %}全件取得する旧バージョン {% for area in areas %}
                       <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}">{{area.name}}
                       </option>
-                    {% endfor %}
+                    {% endfor %} {% endcomment %}
                   </select>
                   <div id="validationServerUsernameFeedback" class="invalid-feedback">エリアを入力してください</div>
                 </div>

@@ -9,11 +9,11 @@
     </li>
   {% endif %}
 {% endfor %} {% endcomment %}
-
+{{area_ids}}
 {% for selected_prefecture_area in request.session.selected_prefecture_areas %}
     <li class="col-sm-6 col-xl-4 area_selection" onclick="ShowSelectedArea() ">
       <label>
-        <input name="header_area" type="checkbox" value="{{selected_prefecture_area.id}}" {%if selected_prefecture_area.id == request.session.tmp_area.id%} checked="checked" {% endif %}>
+        <input name="header_area" type="checkbox" value="{{selected_prefecture_area.id}}" {% if selected_prefecture_area.id in request.session.area_ids %} checked="checked" {% endif %}>
         <span>{{selected_prefecture_area.name}}</span>
       </label>
     </li>

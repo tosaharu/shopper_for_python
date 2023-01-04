@@ -3,36 +3,43 @@
 */
 // 最初に必要な処理
 window.addEventListener('load', () => {
-  ShowSelectedRegionPrefectureSelection();
-  ShowSelectedPrefectureAreaSelection();
-  ShowSelectedArea();
+  // 選択済の地域に応じて、選択可能な都道府県を表示する
+  let region = document.getElementById('header_region').value;
+
+  hidden_list = document.querySelectorAll('[data-header_region_id]');
+  for (let i = 0; i < hidden_list.length; i++) {
+    hidden_list[i].setAttribute("hidden", "");
+    hidden_list[i].setAttribute("disabled", "");
+  }
+
+  display_list = document.querySelectorAll('[data-header_region_id="' + region + '"]')
+  for (let i = 0; i < display_list.length; i++) {
+    display_list[i].removeAttribute("hidden");
+    display_list[i].removeAttribute("disabled");
+  }
+
+  // 選択されているエリアをボタン上に表示する
+  ShowSelectedArea()
 })
 
 
 // 地域選択に関する処理
 let region_select_button = document.getElementById('header_region');
-region_select_button.addEventListener('blur', () => {
+region_select_button.addEventListener('input', () => {
   ShowSelectedRegionPrefectureSelection();
-  // ShowSelectedArea();
 })
 
 // 都道府県選択に関する処理
 let prefecture_select_button = document.getElementById('header_prefecture');
-prefecture_select_button.addEventListener('blur', () => {
+prefecture_select_button.addEventListener('input', () => {
   ShowSelectedPrefectureAreaSelection();
-  // ShowSelectedArea();
 });
 
 
 function ShowSelectedRegionPrefectureSelection() {
-  // 地域が選択された際に、都道府県を選択可能にする
   let region = document.getElementById('header_region').value;
   let prefecture_selector = document.getElementById('header_prefecture');
-  if (region >= 1) {
-    prefecture_selector.removeAttribute("disabled");
-  } else {
-    prefecture_selector.setAttribute("disabled", "disabled");
-  }
+
   // 選択地域の変更に応じて、選択可能な都道府県を表示する
   hidden_list = document.querySelectorAll('[data-header_region_id]');
   for (let i = 0; i < hidden_list.length; i++) {
@@ -63,7 +70,7 @@ function ShowSelectedRegionPrefectureSelection() {
 // 選択していている都道府県に合わせたエリアを表示する
 function ShowSelectedPrefectureAreaSelection() {
   $.ajax({
-    url: "Ajax_GetArea/",
+    url: "Ajax_GetMultiSelectArea/",
     type: "GET",
     data: { header_prefecture: $('#header_prefecture').val() }
   }).done(function (result) {
@@ -84,7 +91,6 @@ function ShowSelectedPrefectureAreaSelection() {
   }).fail(function () {
     //通信失敗時のコールバック
     console.log("通信失敗");
-    $('div.ms-drop>ul>li').remove();
 
   }).always(function () {
     //常に実行する処理
@@ -118,7 +124,8 @@ function ShowSelectedArea() {
 }
 // エリア選択ボタン押下時の最安情報リスト更新
 let reload_selection = document.getElementById('reload_selection');
-reload_selection.addEventListener('click', GetAreaProduct());
+// reload_selection.addEventListener('click', GetAreaProduct());
+// reload_selection.onclick = GetAreaProduct();
 
 
 // 最安商品リストの取得
@@ -135,25 +142,52 @@ function GetAreaProduct() {
   }).done(function (result) {
     //通信成功時のコールバック
     console.log(result);
-    console.log($('div.ms-drop>ul'));
+    console.log($('div#area_selector').next());
 
     // djangohtmlを活用するパターン（ページを更新しないとソースも更新されないようなのでボツ）
     //html = '{% for selected_prefecture_area in request.session.selected_prefecture_areas %}<li class="col-sm-6 col-xl-4 area_selection" onclick="ShowSelectedArea() "><label><input name="header_area" type="checkbox" value="{{selected_prefecture_area.id}}" {%if selected_prefecture_area.id == request.session.tmp_area.id%} checked="checked" {% endif %}><span>{{selected_prefecture_area.name}}</span></label></li>{% endfor %}';
     //console.log(html);
 
-    // // 既存リストの削除
-    // $('div.ms-drop>ul>li').remove();
-    // // 選択都道府県のリストを挿入
-    // $('div.ms-drop>ul').append(result);
+    // 既存リストの削除
+    $('div#area_selector').next().remove();
+    // 選択都道府県のリストを挿入
+    $('div#mylist').append(result);
 
 
   }).fail(function () {
     //通信失敗時のコールバック
     console.log("通信失敗");
-    $('div.ms-drop>ul>li').remove();
 
   }).always(function () {
     //常に実行する処理
-    ShowSelectedArea();
   })
 };
+
+
+// エリア選択ボタンのホバー時カーソル
+let ms_parent = $('.ms-parent');
+console.log(ms_parent);
+let ms_button = $('.ms-button')
+console.log(ms_button);
+
+// ホバー時
+ms_parent.mouseover(() => {
+  ms_button.css(
+    {
+      'border-color': '#86b7fe',
+      'outline': '0',
+      'box-shadow': '0 0 0 0.25rem rgba(13, 110, 253, 0.25)'
+    }
+  )
+})
+
+// ホバー解除時
+ms_parent.mouseout(() => {
+  ms_button.css(
+    {
+      'border-color': '',
+      'outline': '',
+      'box-shadow': ''
+    }
+  )
+})

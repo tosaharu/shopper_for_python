@@ -22,6 +22,71 @@ class IndexView(TemplateView):
     template_name = "shopper/index.html"
 
 
+# 選択された都道府県に応じたエリア選択肢を返すajax
+
+
+class Ajax_GetArea(View):
+    def get(self, request):
+        print('選択された都道府県に応じたエリア選択肢を返すajax')
+
+        html = '<option value="" selected="selected">エリアを選択してください</option>'
+        # リクエストパラメーター取得
+
+        try:
+            prefecture = int(request.GET['prefecture'])
+        except ValueError:
+            return HttpResponse(html)
+
+        print(prefecture)
+
+        # エリア取得用セッションの更新
+        selected_prefecture_areas = Area.objects.filter(
+            prefecture=Prefecture.objects.get(id=prefecture))
+        print(selected_prefecture_areas)
+
+        for selected_prefecture_area in selected_prefecture_areas:
+            html += '<option value="'
+            html += str(selected_prefecture_area.id)
+            html += '">'
+            html += selected_prefecture_area.name
+            html += '</option>'
+        print(html)
+
+        return HttpResponse(html)
+
+# 選択されたエリアに応じた店舗選択肢を返すajax
+
+
+class Ajax_GetStore(View):
+    def get(self, request):
+        print('選択されたエリアに応じた店舗選択肢を返すajax')
+
+        html = '<option value="" selected="selected">店舗を選択してください</option>'
+        # リクエストパラメーター取得
+
+        try:
+            area = int(request.GET['area'])
+        except ValueError:
+            return HttpResponse(html)
+
+        print(area)
+
+        # エリア取得用セッションの更新
+        selected_area_stores = Store.objects.filter(
+            area=Area.objects.get(id=area))
+        print(selected_area_stores)
+
+        for selected_area_store in selected_area_stores:
+            html += '<option value="'
+            html += str(selected_area_store.id)
+            html += '">'
+            html += selected_area_store.name
+            html += '</option>'
+        print(html)
+
+        return HttpResponse(html)
+
+
 # 新規会員登録処理
 
 
@@ -107,14 +172,11 @@ class Ajax_CheckUserMail(View):
 class U_LoginView(View):
     def get(self, request):
         print('ログイン画面')
-        context = {}
-        get_area_contexts(context)
-        return render(request, 'shopper/u_Login.html', context)
+        return render(request, 'shopper/u_Login.html')
 
     def post(self, request):
         print('ログイン実行')
         context = {}
-        get_area_contexts(context)
 
         # 入力されたメールアドレスとパスワードを取得
         email = request.POST['email']
@@ -163,7 +225,7 @@ class U_MainView(View):
 
             # 選択中のエリアにある店舗をリスト化(queryset)
             area_store_list = Store.objects.filter(
-                area=request.session['tmp_areas'][0].id).values_list('id')
+                area__in=request.session['tmp_areas']).values_list('id')
             print(area_store_list)
 
             # queryset ではなくlistにする場合はこちら
@@ -213,21 +275,35 @@ class U_MainView(View):
             request.session['selected_prefecture_areas'] = Area.objects.filter(
                 prefecture=request.session['tmp_areas'][0].prefecture)
 
+            # 選択済エリアを表示するための選択済エリアリスト（int）
+            area_ids = []
+            for tmp_area in request.session['tmp_areas']:
+                print(tmp_area.id)
+                area_ids.append(tmp_area.id)
+            request.session['area_ids'] = area_ids
+            print(request.session['area_ids'])
+
             return render(request, 'shopper/u_Main.html', context)
 
         # セッション切れの場合
         return render(request, 'shopper/u_SessionExpired.html', context)
 
 
-# 選択された都道府県に応じたエリア選択肢を返すajax
+# 選択された都道府県に応じたエリア選択肢（複数選択対応）を返すajax
 
 
-class Ajax_GetArea(View):
+class Ajax_GetMultiSelectArea(View):
     def get(self, request):
         print('選択された都道府県に応じたエリア選択肢を返すajax')
 
+        html = ''
         # リクエストパラメーター取得
-        prefecture = request.GET['header_prefecture']
+
+        try:
+            prefecture = int(request.GET['header_prefecture'])
+        except ValueError:
+            return HttpResponse(html)
+
         print(prefecture)
 
         # エリア取得用セッションの更新
@@ -236,12 +312,11 @@ class Ajax_GetArea(View):
         request.session['selected_prefecture_areas'] = selected_prefecture_areas
         print(request.session['selected_prefecture_areas'][0].prefecture.name)
 
-        html = ''
         for selected_prefecture_area in selected_prefecture_areas:
             html += '<li class="col-sm-6 col-xl-4 area_selection" onclick="ShowSelectedArea() "><label><input name="header_area" type="checkbox" value="'
             html += str(selected_prefecture_area.id)
             html += '"'
-            if selected_prefecture_area.id == request.session['tmp_areas'][0].id:
+            if selected_prefecture_area.id in request.session['area_ids']:
                 html += ' checked="checked" '
             html += '><span>'
             html += selected_prefecture_area.name
@@ -268,7 +343,8 @@ class Ajax_GetAreaProduct(View):
             print(header_areas)
 
             # セッションの選択済エリアリスト
-            request.session['tmp_areas'] = header_areas
+            request.session['tmp_areas'] = Area.objects.filter(
+                id__in=header_areas)
 
             print(request.session['tmp_areas'])
             print(request.session['tmp_areas'][0])
@@ -285,6 +361,7 @@ class Ajax_GetAreaProduct(View):
 
             user_categorized_product_lists = []
             other_categorized_product_lists = []
+            categorized_product_dicts = []
 
             # リストの品目ごとに、
             for posted_item in posted_item_list:
@@ -315,50 +392,62 @@ class Ajax_GetAreaProduct(View):
                 for user_categorized_product_list in user_categorized_product_lists:
                     html += '<li class="card mb-1"><div class="card-body overflow-auto"><h5 class="card-title">'
                     html += user_categorized_product_list[0].item.name
-                    html += '</h5><div class="row mb-1 flex-nowrap"><div class="list-header col-2 col-lg-1">価格</div><div class="list-header col-3 col-lg-2">商品詳細</div><div class="list-header col-2 col-lg-1">ユーザー</div><div class="list-header col-3 col-lg-2">店舗</div><div class="list-header col-3 col-lg-2">日付</div><div class="list-header col-2 col-lg-1">割引</div><div class="list-header col-4 col-lg-3">コメント</div></div>'
+                    html += '</h5><div class="row mb-1 flex-nowrap"><div class="list-header col-2 col-lg-1">価格</div><div class="list-header col-1 col-lg-1">数量</div><div class="list-header col-3 col-lg-2">商品詳細</div><div class="list-header col-2 col-lg-1">ユーザー</div><div class="list-header col-3 col-lg-2">店舗</div><div class="list-header col-3 col-lg-2">日付</div><div class="list-header col-2 col-lg-1">割引</div><div class="list-header col-4 col-lg-3">コメント</div></div>'
                     # 自分の投稿情報のブロック
                     for user_categorized_product in user_categorized_product_list:
                         html += '<div class="self row mb-1 flex-nowrap"><div class="col-2 col-lg-1 price card-text p-2"><span>'
                         html += str(user_categorized_product.price)
-                        html += '</span>円</div><div class="col-3 col-lg-2 card-text p-2">'
+                        html += '</span>円</div><div class="col-1 col-lg-1 card-text p-2">'
+                        html += str(user_categorized_product.amount)
+                        html += '</div><div class="col-3 col-lg-2 card-text p-2">'
                         html += user_categorized_product.detail
                         html += '</div><div class="col-2 col-lg-1 card-text p-2">あなた</div><div class="col-3 col-lg-2 store card-text p-2"><a href="/shopper/u_StoreInfo/'
                         html += str(user_categorized_product.store.id)
                         html += '">'
-                        html += user_categorized_product.name
+                        html += user_categorized_product.store.name
                         html += '</a></div><div class="col-3 col-lg-2 date card-text p-2">'
                         html += str(user_categorized_product.date)
                         html += '</div><div class="col-2 col-lg-1 card-text p-2">'
-                        html += str(user_categorized_product.store.discount)
-                        html += '</div><div class="col-2 col-lg-1 card-text p-2">'
+                        if user_categorized_product.discount == 0:
+                            html += '-'
+                        else:
+                            html += '○'
+                        html += '</div><div class="col-2 col-lg-3 card-text p-2">'
                         html += user_categorized_product.comment
                         html += '</div></div>'
                     # 他ユーザーの投稿情報の存在確認
                     if other_categorized_product_lists is not None and len(other_categorized_product_lists) != 0:
                         for other_categorized_product_list in other_categorized_product_lists:
-                            # 品目が合致するリストを抽出
-                            if other_categorized_product_list[0].item == user_categorized_product_list[0].item:
-                                # 他ユーザーの投稿情報のブロック
-                                for other_categorized_product in other_categorized_product_list:
-                                    html += '<div class="other row mb-1 flex-nowrap"><div class="col-2 col-lg-1 price card-text p-2"><span>'
-                                    html += str(other_categorized_product.price)
-                                    html += '</span>円</div><div class="col-3 col-lg-2 card-text p-2">'
-                                    html += other_categorized_product.detail
-                                    html += '</div><div class="col-3 col-lg-2 card-text p-2">'
-                                    html += other_categorized_product.name
-                                    html += '</div><div class="col-3 col-lg-2 store card-text p-2"><a href="/shopper/u_StoreInfo/'
-                                    html += str(other_categorized_product.store.id)
-                                    html += '">'
-                                    html += other_categorized_product.store.name
-                                    html += '</a></div><div class="col-3 col-lg-2 date card-text p-2">'
-                                    html += str(user_categorized_product.date)
-                                    html += '</div><div class="col-2 col-lg-1 card-text p-2">'
-                                    html += str(user_categorized_product.store.discount)
-                                    html += '</div><div class="col-2 col-lg-1 card-text p-2">'
-                                    html += user_categorized_product.comment
-                                    html += '</div></div>'
-                    else:
-                        html += '<div id="no_data">他ユーザーの投稿情報がありません</div>'
+                            # 他ユーザー投稿がその品目に対して存在するか
+                            if other_categorized_product_list.exists():
+                                # 品目が合致するリストを抽出
+                                if other_categorized_product_list[0].item == user_categorized_product_list[0].item:
+                                    # 他ユーザーの投稿情報のブロック
+                                    for other_categorized_product in other_categorized_product_list:
+                                        html += '<div class="other row mb-1 flex-nowrap"><div class="col-2 col-lg-1 price card-text p-2"><span>'
+                                        html += str(other_categorized_product.price)
+                                        html += '</span>円</div><div class="col-1 col-lg-1 card-text p-2">'
+                                        html += str(other_categorized_product.amount)
+                                        html += '</div><div class="col-3 col-lg-2 card-text p-2">'
+                                        html += other_categorized_product.detail
+                                        html += '</div><div class="col-2 col-lg-1 card-text p-2">'
+                                        html += other_categorized_product.user.name
+                                        html += '</div><div class="col-3 col-lg-2 store card-text p-2"><a href="/shopper/u_StoreInfo/'
+                                        html += str(other_categorized_product.store.id)
+                                        html += '">'
+                                        html += other_categorized_product.store.name
+                                        html += '</a></div><div class="col-3 col-lg-2 date card-text p-2">'
+                                        html += str(user_categorized_product.date)
+                                        html += '</div><div class="col-2 col-lg-1 card-text p-2">'
+                                        if user_categorized_product.discount == 0:
+                                            html += '-'
+                                        else:
+                                            html += '○'
+                                        html += '</div><div class="col-4 col-lg-3 card-text p-2">'
+                                        html += user_categorized_product.comment
+                                        html += '</div></div>'
+                        else:
+                            html += '<div id="no_data">他ユーザーの投稿情報がありません</div>'
                 html += '</ul>'
             else:
                 html += '<div class="my-5"><p>まだ商品の投稿がありません</p><p>購入した商品の情報を登録しましょう</p></div>'
@@ -378,8 +467,16 @@ class U_RegisterProductView(View):
 
         get_area_contexts(context)
 
-        store_list = Store.objects.all()
-        context['store_list'] = store_list
+        # 重いのを解消するために追加（メイン画面とは違い、登録されている都道府県のエリアで固定）
+        context['selected_prefecture_areas'] = Area.objects.filter(
+            prefecture=request.session['user'].area.prefecture)
+        print(context['selected_prefecture_areas'])
+
+        # 登録エリアに絞った店舗一覧の取得
+        selected_area_stores = Store.objects.filter(
+            area=request.session['user'].area)
+        context['selected_area_stores'] = selected_area_stores
+
         main_item_list = MainItem.objects.all()
         context['main_item_list'] = main_item_list
         sub_item_list = SubItem.objects.all()
@@ -391,8 +488,6 @@ class U_RegisterProductView(View):
 
     def post(self, request):
         print('商品情報投稿')
-        context = {}
-        get_area_contexts(context)
 
         # セッションの存在確認が必要
 
@@ -460,7 +555,6 @@ class U_StoreInfoView(View):
     def get(self, request, id):
         print('店舗情報画面')
         context = {}
-        get_area_contexts(context)
 
         store_id = id
         store = Store.objects.get(id=store_id)
@@ -483,19 +577,23 @@ class U_StoreInfoView(View):
 class U_ChangeInfoView(View):
     def get(self, request):
         print('ユーザー情報変更画面')
-        context = {}
-        get_area_contexts(context)
 
         # セッションの中身を確認
         if 'user' in request.session:
             user = request.session['user']
-            print(user)
-            print(user.gender)
+
+            context = {}
+            get_area_contexts(context)
+
+            # 重いのを解消するために追加（メイン画面とは違い、登録されている都道府県のエリアで固定）
+            context['selected_prefecture_areas'] = Area.objects.filter(
+                prefecture=request.session['user'].area.prefecture)
+            print(context['selected_prefecture_areas'])
 
             return render(request, 'shopper/u_ChangeInfo.html', context)
 
         # セッション切れの場合
-        return render(request, 'shopper/u_SessionExpired.html', context)
+        return render(request, 'shopper/u_SessionExpired.html')
 
 
 # ユーザーの誕生日を取得するajax
@@ -600,13 +698,11 @@ class Ajax_ChangeUserPassword(View):
 class U_LogoutView(View):
     def get(self, request):
         print('ログアウト画面')
-        context = {}
-        get_area_contexts(context)
 
         # セッション破棄
         request.session.flush()
 
-        return render(request, 'shopper/u_Logout.html', context)
+        return render(request, 'shopper/u_Logout.html')
 
 # パスワード紛失時の再設定認証処理
 
@@ -614,14 +710,9 @@ class U_LogoutView(View):
 class U_ResetPasswordAuthView(View):
     def get(self, request):
         print('パスワード再設定認証画面1')
-        context = {}
-        get_area_contexts(context)
-        return render(request, 'shopper/u_ResetPasswordAuth1.html', context)
+        return render(request, 'shopper/u_ResetPasswordAuth1.html')
 
     def post(self, request):
-        context = {}
-        get_area_contexts(context)
-
         # ワンタイムパスワードの生成
         onetime_password = create_onetime_password()
 
@@ -637,7 +728,7 @@ class U_ResetPasswordAuthView(View):
 
         # パスワードをセッションに保存
         request.session['onetime_password'] = onetime_password
-        return render(request, 'shopper/u_ResetPasswordAuth2.html', context)
+        return render(request, 'shopper/u_ResetPasswordAuth2.html')
 
 
 # 入力されたメールアドレスが存在し、誕生日が登録情報と合致するかをチェックするajax
@@ -704,22 +795,16 @@ class Ajax_CheckOneTimePass(View):
 class U_ResetPasswordView(View):
     def get(self, request):
         print('パスワード再設定画面')
-        context = {}
-        get_area_contexts(context)
-        return render(request, 'shopper/u_ResetPassword.html', context)
+        return render(request, 'shopper/u_ResetPassword.html')
 
     def post(self, request):
-        context = {}
-        get_area_contexts(context)
-
-        originalPass = request.POST['newpassword']
-        password = make_password(originalPass)
-
         # セッションの確認
         if 'change_password_user' in request.session:
-
             # ユーザー情報をセッションから取得
             change_password_user = request.session['change_password_user']
+
+            originalPass = request.POST['newpassword']
+            password = make_password(originalPass)
 
             # ユーザーデータを更新
             result = User.objects.filter(
@@ -727,13 +812,13 @@ class U_ResetPasswordView(View):
 
             if result == 1:
                 # 対象の1件が正常にアップデートされた場合
-                return render(request, 'shopper/u_ResetPasswordComplete.html', context)
+                return render(request, 'shopper/u_ResetPasswordComplete.html')
 
             # アップデートが何かしらの理由でできなかった場合
             # あまりなさそうなので一旦保留
 
         # セッション切れの場合
-        return render(request, 'shopper/u_SessionExpired.html', context)
+        return render(request, 'shopper/u_SessionExpired.html')
 
 
 # セッション切れの際に飛ぶページ
@@ -741,9 +826,7 @@ class U_ResetPasswordView(View):
 
 class U_SessionExpiredView(View):
     def get(self, request):
-        context = {}
-        get_area_contexts(context)
-        return render(request, 'shopper/u_SessionExpired.html', context)
+        return render(request, 'shopper/u_SessionExpired.html')
 
 
 # 退会処理
@@ -752,14 +835,9 @@ class U_SessionExpiredView(View):
 class U_QuitView(View):
     def get(self, request):
         print('退会確認画面')
-        context = {}
-        get_area_contexts(context)
-        return render(request, 'shopper/u_QuitConfirm.html', context)
+        return render(request, 'shopper/u_QuitConfirm.html')
 
     def post(self, request):
-        context = {}
-        get_area_contexts(context)
-
         # セッションの確認
         if 'user' in request.session:
 
@@ -774,10 +852,10 @@ class U_QuitView(View):
                 # 対象の1件が正常にアップデートされた場合
                 request.session.flush()
 
-                return render(request, 'shopper/u_QuitComplete.html', context)
+                return render(request, 'shopper/u_QuitComplete.html')
 
             # アップデートが何かしらの理由でできなかった場合
             # あまりなさそうなので一旦保留
 
         # セッション切れの場合
-        return render(request, 'shopper/u_SessionExpired.html', context)
+        return render(request, 'shopper/u_SessionExpired.html')

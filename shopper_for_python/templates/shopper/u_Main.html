@@ -5,6 +5,8 @@
   <title>メインページ</title>
   <!-- メイン画面用CSS -->
   <link rel="stylesheet" href="{% static 'shopper/css/u_main.css' %}"/>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css">
   {% endblock %}
   
 {% block content %}
@@ -13,88 +15,75 @@
   <div class="container">
     <div class="">
       <br>
-      <h2>商品情報を登録・チェック</h2>
-      <form>
-        <div class="row justify-content-start my-4">
-          <a type="button" class="btn btn-primary col-3 col-sm-2 mx-2" href="{% url 'u_RegisterProduct' %}">商品登録</a>
-          {% comment %} <button type="button" class="btn btn-light col-3 mx-2" value="商品検索">検索する</button>
-          <button type="button" class="btn btn-light col-3 mx-2" onclick="location.href='/shopper/CouponListS'">クーポン</button> {% endcomment %}
-      
-        </div>
-      </form>
-      <form>
-        <div class="row my-2">
-          <div class="col-3">
-            <select id="header_region" class="form-select" name="header_region"
-              aria-label="Default select example">
-              <option>地方</option>
-              {% for region in regions %}
-              <option value="{{region.id}}"
-                {%if region.id == request.session.tmp_area.prefecture.region.id %}
-                selected
-                {% endif %}
-                >
-                {{region.name}}
-              </option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-3">
-            <select id="header_prefecture" class="form-select"
-              name="header_prefecture" aria-label="Default select example"
-              disabled="disabled">
-              <option>都道府県</option>
-              {% for prefecture in prefectures %}
-              <option data-header_region_id="{{prefecture.region.id}}"
-                value="{{prefecture.id}}"
-                {%if prefecture.id == request.session.tmp_area.prefecture.id %}
-                selected
-                {% endif %}
-                >
-                {{prefecture.name}}
-              </option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-6">
-            <div class="ms-parent" style="width:100%;">
-              <button id="msbtn" type="button" class="ms-choice form-select"><span></span></button>
-              <div class="ms-drop bottom">
-                <ul class="row" style="max-height: 250px;">
-                  {% comment %} {% for area in areas %}
-                  {% if area.prefecture.id == request.session.tmp_area.prefecture.id %} 
-                  <li class="col-sm-6 col-xl-4 area_selection" onclick="ShowSelectedArea() ">
-                    <label>
-                      <input name="header_area" type="checkbox" value="{{area.id}}"
-                      {%if area.id == request.session.tmp_area.id%}
-                      checked
-                      {% endif %}
-                      ><span>{{area.name}}</span>
-                    </label>
-                  </li>
-                  {% endif %}
-                  {% endfor %} {% endcomment %}
-                  {% include 'shopper/u_MainAreaSelection.html' %}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row my-2">
-          <a id="reload_selection" type="button" class="btn btn-primary col-3 col-sm-2 mx-2" onclick="GetAreaProduct()">エリア選択</a>
-        </div>
-      </form>
+      <h2>商品情報をチェック</h2>
+      <div class="row justify-content-start my-4">
+        <a type="button" class="btn btn-primary col-3 col-sm-2 mx-2" href="{% url 'u_RegisterProduct' %}">商品登録</a>
+        {% comment %}のちのち機能追加予定 
+        <button type="button" class="btn btn-light col-3 mx-2" value="商品検索">検索する</button>
+        <button type="button" class="btn btn-light col-3 mx-2" onclick="location.href='/shopper/CouponListS'">クーポン</button>
+        {% endcomment %}
+    
+      </div>
+
     </div>
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="mylist-tab" data-bs-toggle="tab" data-bs-target="#mylist" type="button" role="tab" aria-controls="mylist" aria-selected="true">
             最安情報</button>
           <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">登録履歴</button>
-          {% comment %} <button class="nav-link" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">お気に入り</button> {% endcomment %}
+          {% comment %}後々機能追加予定
+          <button class="nav-link" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">お気に入り</button>
+          {% endcomment %}
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active overflow-auto my-1" id="mylist" role="tabpanel" aria-labelledby="mylist-tab">
+        <div class="tab-pane fade show active my-1" id="mylist" role="tabpanel" aria-labelledby="mylist-tab">
+          <div id="area_selector" class="row my-2">
+            <div class="col-3">
+              <select id="header_region" class="form-select" name="header_region"
+                aria-label="Default select example">
+                <option>地方</option>
+                {% for region in regions %}
+                <option value="{{region.id}}"
+                  {%if region.id == request.session.tmp_areas.0.prefecture.region.id %}
+                  selected
+                  {% endif %}
+                  >
+                  {{region.name}}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-3">
+              <select id="header_prefecture" class="form-select"
+                name="header_prefecture" aria-label="Default select example">
+                <option>都道府県</option>
+                {% for prefecture in prefectures %}
+                <option data-header_region_id="{{prefecture.region.id}}"
+                  value="{{prefecture.id}}"
+                  {%if prefecture.id == request.session.tmp_areas.0.prefecture.id %}
+                  selected
+                  {% endif %}
+                  >
+                  {{prefecture.name}}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-5">
+              <div class="ms-parent" style="width:100%;">
+                <button id="msbtn" type="button" class="ms-button form-select"><span></span></button>
+                <div class="ms-drop bottom">
+                  <ul class="row" style="max-height: 250px;">
+                    {% include 'shopper/u_MainAreaSelection.html' %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <button onclick="GetAreaProduct()" id="reload_selection" type="button" class="btn btn-primary col-1">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
           <!-- エリア選択時にはajaxで以下のブロックを全て入れ替える-->
           {% if user_categorized_product_lists != null and user_categorized_product_lists|length != 0 %}
             <ul>
@@ -105,6 +94,7 @@
                     <h5 class="card-title">{{user_categorized_product_list.0.item.name}}</h5>
                     <div class="row mb-1 flex-nowrap">
                       <div class="list-header col-2 col-lg-1">価格</div>
+                      <div class="list-header col-1 col-lg-1">数量</div>
                       <div class="list-header col-3 col-lg-2">商品詳細</div>
                       <div class="list-header col-2 col-lg-1">ユーザー</div>
                       <div class="list-header col-3 col-lg-2">店舗</div>
@@ -116,6 +106,7 @@
                     {% for user_categorized_product in user_categorized_product_list %}
                     <div class="self row mb-1 flex-nowrap">
                       <div class="col-2 col-lg-1 price card-text p-2"><span>{{user_categorized_product.price}}</span>円</div>
+                      <div class="col-1 col-lg-1 card-text p-2">{{user_categorized_product.amount}}</div>
                       <div class="col-3 col-lg-2 card-text p-2">{{user_categorized_product.detail}}</div>
                       <div class="col-2 col-lg-1 card-text p-2">あなた</div>
                       <div class="col-3 col-lg-2 store card-text p-2">
@@ -123,29 +114,30 @@
                           {{user_categorized_product.store.name}}
                         </a>
                       </div>
-                      <div class="col-3 col-lg-2 date card-text p-2">{{user_categorized_product.date}}</div>
-                      <div class="col-2 col-lg-1 card-text p-2">{{user_categorized_product.discount}}</div>
+                      <div class="col-3 col-lg-2 date card-text p-2">{{user_categorized_product.date|date:"Y-m-d"}}</div>
+                      <div class="col-2 col-lg-1 card-text p-2">{% if user_categorized_product.discount == 0 %}-{% else %}○{% endif %}</div>
                       <div class="col-4 col-lg-3 card-text p-2">{{user_categorized_product.comment}}</div>
                     </div>
                     {% endfor %}
                     <!-- 他ユーザーの投稿情報の存在確認 -->
                     {% if other_categorized_product_lists != null and other_categorized_product_lists|length != 0 %}
                       {% for other_categorized_product_list in other_categorized_product_lists %}
-                      <!-- 品目が合致するリストを抽出-->
-                      {% if other_categorized_product_list.0.item == user_categorized_product_list.0.item %}
+                        <!-- 品目が合致するリストを抽出-->
+                        {% if other_categorized_product_list.0.item == user_categorized_product_list.0.item %}
                           <!-- 他ユーザーの投稿情報のブロック -->
                           {% for other_categorized_product in other_categorized_product_list %}
                           <div class="other row mb-1 flex-nowrap">
                             <div class="col-2 col-lg-1 price card-text p-2"><span>{{other_categorized_product.price}}</span>円</div>
-                              <div class="col-3 col-lg-2 card-text p-2">{{other_categorized_product.detail}}</div>
-                              <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.user.name}}</div>
-                              <div class="col-3 col-lg-2 store card-text p-2">
-                                <a href="/shopper/u_StoreInfo/{{other_categorized_product.store.id}}">
+                            <div class="col-1 col-lg-1 card-text p-2">{{other_categorized_product.amount}}</div>
+                            <div class="col-3 col-lg-2 card-text p-2">{{other_categorized_product.detail}}</div>
+                            <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.user.name}}</div>
+                            <div class="col-3 col-lg-2 store card-text p-2">
+                              <a href="/shopper/u_StoreInfo/{{other_categorized_product.store.id}}">
                                   {{other_categorized_product.store.name}}
                                 </a>
                               </div>
-                              <div class="col-3 col-lg-2 date card-text p-2">{{other_categorized_product.date}}</div>
-                              <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.discount}}</div>
+                              <div class="col-3 col-lg-2 date card-text p-2">{{other_categorized_product.date|date:"Y-m-d"}}</div>
+                              <div class="col-2 col-lg-1 card-text p-2">{% if other_categorized_product.discount == 0 %}なし{% else %}あり{% endif %}</div>
                               <div class="col-4 col-lg-3 card-text p-2">{{other_categorized_product.comment}}</div>
                             </div>
                           {% endfor %}
@@ -157,7 +149,7 @@
                 </li>
               {% endfor %}
             </ul>
-            {% else%}
+          {% else%}
             <div class="my-5">
               <p>まだ商品の投稿がありません</p>
               <p>購入した商品の情報を登録しましょう</p>
@@ -170,25 +162,29 @@
           <div class="card">
             <div class="card-body mb-1 overflow-auto">  
               <div class="row mb-1 flex-nowrap">
-                <div class="list-header col-3 col-lg-2">日付</div>
+                <div class="list-header col-2 col-lg-2">日付</div>
+                <div class="list-header col-2 col-lg-1">品目</div>
                 <div class="list-header col-2 col-lg-1">価格</div>
-                <div class="list-header col-3 col-lg-2">商品詳細</div>
-                <div class="list-header col-3 col-lg-2">店舗</div>
-                <div class="list-header col-2 col-lg-1">割引</div>
-                <div class="list-header col-4 col-lg-4">コメント</div>
+                <div class="list-header col-1 col-lg-1">数量</div>
+                <div class="list-header col-2 col-lg-2">商品詳細</div>
+                <div class="list-header col-2 col-lg-2">店舗</div>
+                <div class="list-header col-1 col-lg-1">割引</div>
+                <div class="list-header col-3 col-lg-2">コメント</div>
               </div>
               {% for user_product in user_product_list %}
               <div class="self row mb-1 flex-nowrap">
-                <div class="col-3 col-lg-2 card-text p-2">{{user_product.date}}</div>
+                <div class="col-2 col-lg-2 card-text p-2">{{user_product.date|date:"Y-m-d"}}</div>
+                <div class="col-2 col-lg-1 card-text p-2">{{user_product.item.name}}</div>
                 <div class="col-2 col-lg-1 price card-text p-2"><span>{{user_product.price}}</span>円</div>
-                <div class="col-3 col-lg-2 card-text p-2">{{user_product.detail}}</div>
-                <div class="col-3 col-lg-2 store card-text p-2">
+                <div class="col-1 col-lg-1 card-text p-2">{{user_product.amount}}</div>
+                <div class="col-2 col-lg-2 card-text p-2">{{user_product.detail}}</div>
+                <div class="col-2 col-lg-2 store card-text p-2">
                   <a href="/shopper/u_StoreInfo/{{user_product.store.id}}">
                     {{user_product.store.name}}
                   </a>
                 </div>
-                <div class="col-2 col-lg-1 card-text p-2">{{user_product.discount}}</div>
-                <div class="col-4 col-lg-4 card-text p-2">{{user_product.comment}}</div>
+                <div class="col-1 col-lg-1 card-text p-2">{% if user_product.discount == 0 %}-{% else %}○{% endif %}</div>
+                <div class="col-3 col-lg-2 card-text p-2">{{user_product.comment}}</div>
               </div>
               {% endfor %}
             </div>
@@ -205,6 +201,8 @@
   </div>
 {% endblock %}
 {% block extra_JS %}
+  <!-- Latest compiled and minified JavaScript -->
+  {% comment %} <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script> {% endcomment %}
   <script type="text/javascript" src="{% static 'shopper/js/main.js' %}"></script>
 {% endblock %}
 

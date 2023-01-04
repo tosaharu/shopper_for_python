@@ -90,7 +90,7 @@
             <div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
           </div>
           <div class="col-sm" id="prefecture_outline">
-            <select id="prefecture" class="form-select" aria-label="Default select example" disabled="disabled" onchange="CheckSelectedPrefecture(this)" required="required">
+            <select id="prefecture" class="form-select" aria-label="Default select example" onchange="CheckSelectedPrefecture(this)" required="required">
               <option value="" selected="selected">都道府県を選択してください</option>
               {% for prefecture in prefectures %}
                 <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}">{{prefecture.name}}</option>
@@ -99,12 +99,12 @@
             <div id="validationServerUsernameFeedback" class="invalid-feedback">都道府県を入力してください</div>
           </div>
           <div class="col-sm" id="area_outline">
-            <select id="area" class="form-select" aria-label="Default select example" name="area" disabled="disabled" required="required">
+            <select id="area" class="form-select" aria-label="Default select example" name="area" required="required">
               <option value="" selected="selected">エリアを選択してください</option>
-              {% for area in areas %}
+              {% comment %} {% for area in areas %}
                 <option data-prefecture_id="{{area.prefecture}}" value="{{area.id}}">{{area.name}}
                 </option>
-              {% endfor %}
+              {% endfor %} {% endcomment %}
             </select>
             <div id="validationServerUsernameFeedback" class="invalid-feedback">エリアを入力してください</div>
           </div>

@@ -25,36 +25,39 @@ function today_select() {
     document.getElementById("date").value = yyyy + '-' + mm + '-' + dd;
 }
 
-//エリアのプルダウンボタンが変更された際の処理
-function CheckSelectedArea(obj) {
-    let area = obj.value;
-    console.log(area);
-    let store_selector = document.getElementById('store');
-    console.log(store_selector);
+// エリア選択に関する処理
+let area_select_button = document.getElementById('area');
+area_select_button.addEventListener('input', function () {
+    ShowSelectedAreaStoreSelection();
+});
 
-    // 選択エリアの変更に応じて、選択可能な店舗を表示する
-    hidden_list = document.querySelectorAll('[data-area_id]');
-    for (let i = 0; i < hidden_list.length; i++) {
-        hidden_list[i].setAttribute("hidden", "");
-        hidden_list[i].setAttribute("disabled", "");
-    }
-    display_list = document.querySelectorAll('[data-area_id="' + area + '"]')
-    for (let i = 0; i < display_list.length; i++) {
-        display_list[i].removeAttribute("hidden");
-        display_list[i].removeAttribute("disabled");
-    }
 
-    // 選択エリアを変更した際に、対象外の店舗選択をリセットする
-    let index = store_selector.selectedIndex;
-    let s_area = document.querySelectorAll('[data-area_id]')[index].dataset.area_id;
-    console.log(s_area);
-    if (s_area != area) {
-        store_selector.options[0].selected = true;
-    }
-}
+// 選択していているエリアに合わせた店舗を表示する
+function ShowSelectedAreaStoreSelection() {
+    $.ajax({
+        url: "Ajax_GetStore/",
+        type: "GET",
+        data: { area: $('#area').val() }
+    }).done(function (result) {
+        //通信成功時のコールバック
+        console.log(result);
+        console.log($('#store'));
 
-// エリア情報はデフォルトでユーザーの登録エリア情報が選択済になる。その際に店舗も絞り込まれているようにする。
-window.addEventListener('load', CheckSelectedArea(document.getElementById('area')))
+        // 既存リストの削除
+        $('#store').children().remove();
+        // 選択都道府県のリストを挿入
+        $('#store').append(result);
+
+
+    }).fail(function () {
+        //通信失敗時のコールバック
+        console.log("通信失敗");
+
+    }).always(function () {
+        //常に実行する処理
+    })
+};
+
 
 //大品目のプルダウンボタンが変更された際の処理
 function CheckSelectedMainItem(obj) {
@@ -143,15 +146,19 @@ function CheckSelectedSubItem(obj) {
 }
 
 //店舗登録モーダルに関する処理
-//新規登録ボタンを押下した際にエリアデータをモーダルに反映する処理
 
-// 起動ボタンの取得
+// モーダル起動ボタンの取得
 let btn1 = document.getElementById('subm2');
 
+
+//モーダル起動ボタンを押下した際にエリアデータをモーダルに反映する処理
 btn1.addEventListener('click', () => {
     let region = document.getElementById('region').value;
     let prefecture = document.getElementById('prefecture').value;
     let area = document.getElementById('area').value;
+    console.log(region);
+    console.log(prefecture);
+    console.log(area);
 
     let targetRegion = document.querySelector('#store_region>option[value="' + region + '"]');
     targetRegion.selected = true;
@@ -161,7 +168,77 @@ btn1.addEventListener('click', () => {
     targetArea.selected = true;
 })
 
-//登録ボタンを押下した際に、１．記載の情報をDB登録　２．店舗を今登録したもので選択済みにする　３．モーダルを閉じてリセットする　４．登録完了or失敗の表示（余裕があれば）
+
+// モーダル内の地域選択に関する処理
+let store_region_select_button = document.getElementById('store_region');
+store_region_select_button.addEventListener('input', function () {
+    Store_ShowSelectedRegionPrefectureSelection(this);
+})
+
+// モーダル内の都道府県選択に関する処理
+let store_prefecture_select_button = document.getElementById('store_prefecture');
+store_prefecture_select_button.addEventListener('input', function () {
+    Store_ShowSelectedPrefectureAreaSelection();
+});
+
+//モーダル内の、地域のプルダウンボタンが変更された際の処理
+function Store_ShowSelectedRegionPrefectureSelection(obj) {
+
+    let region = obj.value;
+    let prefecture_selector = document.getElementById('store_prefecture');
+
+    // 選択地域の変更に応じて、選択可能な都道府県を表示する
+    hidden_list = document.querySelectorAll('#store_prefecture>[data-region_id]');
+    for (let i = 0; i < hidden_list.length; i++) {
+        hidden_list[i].setAttribute("hidden", "");
+        hidden_list[i].setAttribute("disabled", "");
+    }
+    display_list = document.querySelectorAll('#store_prefecture>[data-region_id="' + region + '"]')
+    for (let i = 0; i < display_list.length; i++) {
+        display_list[i].removeAttribute("hidden");
+        display_list[i].removeAttribute("disabled");
+    }
+
+    // 選択地域を変更した際に、対象外の都道府県・エリア・店舗の選択をリセットする
+    let index = prefecture_selector.selectedIndex;
+    let p_region = document.querySelectorAll('#store_prefecture>[data-region_id]')[index].dataset.region_id;
+    console.log(p_region);
+    if (p_region != region) {
+        // 都道府県の選択をリセット
+        prefecture_selector.options[0].selected = true;
+        // エリアの選択をリセット
+        Store_ShowSelectedPrefectureAreaSelection()
+    }
+}
+
+
+// モーダル内の、選択していている都道府県に合わせたエリアを表示する
+function Store_ShowSelectedPrefectureAreaSelection() {
+    $.ajax({
+        url: "Ajax_GetArea/",
+        type: "GET",
+        data: { prefecture: $('#store_prefecture').val() }
+    }).done(function (result) {
+        //通信成功時のコールバック
+        console.log(result);
+        console.log($('#store_area'));
+
+        // 既存リストの削除
+        $('#store_area').children().remove();
+        // 選択都道府県のリストを挿入
+        $('#store_area').append(result);
+
+    }).fail(function () {
+        //通信失敗時のコールバック
+        console.log("通信失敗");
+
+    }).always(function () {
+        //常に実行する処理
+    })
+};
+
+
+//モーダル内の登録ボタンを押下した際に、１．記載の情報をDB登録　２．店舗を今登録したもので選択済みにする　３．モーダルを閉じてリセットする　４．登録完了or失敗の表示（余裕があれば）
 
 // bsのモーダル用functionを使用できるように（参考元ではmodule化=>impotして使用していたが、bootstrap.クラス名でも呼び出し可なのでそちらで）
 let modal = document.getElementById('modal');
