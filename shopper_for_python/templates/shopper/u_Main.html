@@ -3,10 +3,10 @@
 
 {% block extra_head %}
   <title>メインページ</title>
-  <!-- メイン画面用CSS -->
-  <link rel="stylesheet" href="{% static 'shopper/css/u_main.css' %}"/>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css">
+  <!-- メイン画面用CSS -->
+  <link rel="stylesheet" href="{% static 'shopper/css/u_main.css' %}"/>
   {% endblock %}
   
 {% block content %}
@@ -94,11 +94,11 @@
                     <h5 class="card-title">{{user_categorized_product_list.0.item.name}}</h5>
                     <div class="row mb-1 flex-nowrap">
                       <div class="list-header col-2 col-lg-1">価格</div>
-                      <div class="list-header col-1 col-lg-1">数量</div>
+                      <div class="list-header col-2 col-lg-1">数量</div>
                       <div class="list-header col-3 col-lg-2">商品詳細</div>
                       <div class="list-header col-2 col-lg-1">ユーザー</div>
                       <div class="list-header col-3 col-lg-2">店舗</div>
-                      <div class="list-header col-3 col-lg-2">日付</div>
+                      <div class="list-header col-3 col-lg-1">日付</div>
                       <div class="list-header col-2 col-lg-1">割引</div>
                       <div class="list-header col-4 col-lg-3">コメント</div>
                     </div>
@@ -106,7 +106,7 @@
                     {% for user_categorized_product in user_categorized_product_list %}
                     <div class="self row mb-1 flex-nowrap">
                       <div class="col-2 col-lg-1 price card-text p-2"><span>{{user_categorized_product.price}}</span>円</div>
-                      <div class="col-1 col-lg-1 card-text p-2">{{user_categorized_product.amount}}</div>
+                      <div class="col-2 col-lg-1 card-text p-2">{{user_categorized_product.amount}}</div>
                       <div class="col-3 col-lg-2 card-text p-2">{{user_categorized_product.detail}}</div>
                       <div class="col-2 col-lg-1 card-text p-2">あなた</div>
                       <div class="col-3 col-lg-2 store card-text p-2">
@@ -114,7 +114,7 @@
                           {{user_categorized_product.store.name}}
                         </a>
                       </div>
-                      <div class="col-3 col-lg-2 date card-text p-2">{{user_categorized_product.date|date:"Y-m-d"}}</div>
+                      <div class="col-3 col-lg-1 date card-text p-2">{{user_categorized_product.date|date:"Y-m-d"}}</div>
                       <div class="col-2 col-lg-1 card-text p-2">{% if user_categorized_product.discount == 0 %}-{% else %}○{% endif %}</div>
                       <div class="col-4 col-lg-3 card-text p-2">{{user_categorized_product.comment}}</div>
                     </div>
@@ -128,7 +128,7 @@
                           {% for other_categorized_product in other_categorized_product_list %}
                           <div class="other row mb-1 flex-nowrap">
                             <div class="col-2 col-lg-1 price card-text p-2"><span>{{other_categorized_product.price}}</span>円</div>
-                            <div class="col-1 col-lg-1 card-text p-2">{{other_categorized_product.amount}}</div>
+                            <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.amount}}</div>
                             <div class="col-3 col-lg-2 card-text p-2">{{other_categorized_product.detail}}</div>
                             <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.user.name}}</div>
                             <div class="col-3 col-lg-2 store card-text p-2">
@@ -136,7 +136,7 @@
                                   {{other_categorized_product.store.name}}
                                 </a>
                               </div>
-                              <div class="col-3 col-lg-2 date card-text p-2">{{other_categorized_product.date|date:"Y-m-d"}}</div>
+                              <div class="col-3 col-lg-1 date card-text p-2">{{other_categorized_product.date|date:"Y-m-d"}}</div>
                               <div class="col-2 col-lg-1 card-text p-2">{% if other_categorized_product.discount == 0 %}なし{% else %}あり{% endif %}</div>
                               <div class="col-4 col-lg-3 card-text p-2">{{other_categorized_product.comment}}</div>
                             </div>
@@ -165,7 +165,7 @@
                 <div class="list-header col-2 col-lg-2">日付</div>
                 <div class="list-header col-2 col-lg-1">品目</div>
                 <div class="list-header col-2 col-lg-1">価格</div>
-                <div class="list-header col-1 col-lg-1">数量</div>
+                <div class="list-header col-2 col-lg-1">数量</div>
                 <div class="list-header col-2 col-lg-2">商品詳細</div>
                 <div class="list-header col-2 col-lg-2">店舗</div>
                 <div class="list-header col-1 col-lg-1">割引</div>
@@ -176,7 +176,7 @@
                 <div class="col-2 col-lg-2 card-text p-2">{{user_product.date|date:"Y-m-d"}}</div>
                 <div class="col-2 col-lg-1 card-text p-2">{{user_product.item.name}}</div>
                 <div class="col-2 col-lg-1 price card-text p-2"><span>{{user_product.price}}</span>円</div>
-                <div class="col-1 col-lg-1 card-text p-2">{{user_product.amount}}</div>
+                <div class="col-2 col-lg-1 card-text p-2">{{user_product.amount}}</div>
                 <div class="col-2 col-lg-2 card-text p-2">{{user_product.detail}}</div>
                 <div class="col-2 col-lg-2 store card-text p-2">
                   <a href="/shopper/u_StoreInfo/{{user_product.store.id}}">

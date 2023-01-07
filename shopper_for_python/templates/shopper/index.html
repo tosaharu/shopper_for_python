@@ -17,28 +17,26 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar navbar-light fixed-top mx-5">
+  <nav class="navbar navbar-expand-sm navbar navbar-light fixed-top mx-1 mx-sm-5">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'index' %}">Shopper</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
         data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false"
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      </button> {% endcomment %}
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item me-3">
+          <li class="nav-item me-3" id="navlink-use">
             <a type="button" class="btn tx" href="#how-to-use">使い方</a>
           </li>
-          <li class="nav-item me-3">
+          <li class="nav-item me-3" id="navlink-register">
             <a type="button" class="btn btn-outline-dark" href="{% url 'u_RegisterUser' %}"><i class="fas fa-edit"></i> 会員登録</a>
           </li>
-          <li class="nav-item me-3">
+          <li class="nav-item me-3" id="navlink-login">
             <a type="button" class="btn btn-outline-dark" href="{% url 'u_Login' %}"><i class="fas fa-unlock-alt"></i> ログイン</a>
           </li>
         </ul>
-      </div>
     </div>
   </nav>
 

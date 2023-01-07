@@ -31,13 +31,19 @@ window.addEventListener('load', function setBirthdayData() {
 		let day = obj["day"];
 
 		let user_year = document.querySelector(`#year-select>option[value='${year}']`);
-		user_year.setAttribute("selected", "selected");
+		console.log(user_year);
+		user_year.selected = true;
+		// user_year.setAttribute("selected", "selected");
 
 		let user_month = document.querySelector(`#month-select>option[value='${month}']`);
-		user_month.setAttribute("selected", "selected");
+		console.log(user_month);
+		user_month.selected = true;
+		// user_month.setAttribute("selected", "selected");
 
 		let user_day = document.querySelector(`#day-select>option[value='${day}']`);
-		user_day.setAttribute("selected", "selected");
+		console.log(user_day);
+		user_day.selected = true;
+		// user_day.setAttribute("selected", "selected");
 		console.log("通信成功");
 
 	}).fail(function (result) {

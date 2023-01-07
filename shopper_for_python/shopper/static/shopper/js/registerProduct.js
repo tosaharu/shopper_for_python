@@ -58,92 +58,92 @@ function ShowSelectedAreaStoreSelection() {
     })
 };
 
-
-//大品目のプルダウンボタンが変更された際の処理
-function CheckSelectedMainItem(obj) {
-    let main_item = obj.value;
-    console.log(main_item);
-    let sub_item_selector = document.getElementById('subitem');
-    console.log(sub_item_selector);
-
-
-    // 大品目が選択された際に、中品目を選択可能にする
-    if (main_item >= 1) {
-        sub_item_selector.removeAttribute("disabled");
-    }
-    // else {
-    //     console.log("else処理");
-    //     sub_item_selector.setAttribute("disabled", "disabled");
-    // }
-
-    // 大品目の変更に応じて、選択可能な中品目を表示する
-    hidden_list = document.querySelectorAll('[data-main_item_id]');
-    for (let i = 0; i < hidden_list.length; i++) {
-        hidden_list[i].setAttribute("hidden", "");
-        hidden_list[i].setAttribute("disabled", "");
-    }
-    display_list = document.querySelectorAll('[data-main_item_id="' + main_item + '"]')
-    for (let i = 0; i < display_list.length; i++) {
-        display_list[i].removeAttribute("hidden");
-        display_list[i].removeAttribute("disabled");
-    }
-
-    // 大品目を変更した際に、対象外の品目選択をリセットする
-    sub_item_selector.options[0].selected = true;
-    let item_selector = document.getElementById('item');
-    item_selector.options[0].selected = true;
-
-    // 旧処理。よく考えたら大品目を変更したらそれ以下の項目はすべて対象外になるはずなので不要
-    // let index = sub_item_selector.selectedIndex;
-    // let s_main_item = document.querySelectorAll('[data-main_item_id]')[index].dataset.main_item_id;
-    // console.log(s_main_item);
-    // if (s_main_item != main_item) {
-    //     sub_item_selector.options[0].selected = true;
-    //     let item_selector = document.getElementById('item');
-    //     item_selector.options[0].selected = true;
-    // }
-}
-
-//中品目のプルダウンボタンが変更された際の処理
-function CheckSelectedSubItem(obj) {
-    let sub_item = obj.value;
-    console.log(sub_item);
-    let item_selector = document.getElementById('item');
-    console.log(item_selector);
+// 品目入力全体を変更するかもなのでいったん無効
+// //大品目のプルダウンボタンが変更された際の処理
+// function CheckSelectedMainItem(obj) {
+//     let main_item = obj.value;
+//     console.log(main_item);
+//     let sub_item_selector = document.getElementById('subitem');
+//     console.log(sub_item_selector);
 
 
-    // 中品目が選択された際に、中品目を選択可能にする
-    if (sub_item >= 1) {
-        item_selector.removeAttribute("disabled");
-    }
-    // else {
-    //     console.log("else処理");
-    //     item_selector.setAttribute("disabled", "disabled");
-    // }
+//     // 大品目が選択された際に、中品目を選択可能にする
+//     if (main_item >= 1) {
+//         sub_item_selector.removeAttribute("disabled");
+//     }
+//     // else {
+//     //     console.log("else処理");
+//     //     sub_item_selector.setAttribute("disabled", "disabled");
+//     // }
 
-    // 中品目の変更に応じて、選択可能な品目を表示する
-    hidden_list = document.querySelectorAll('[data-sub_item_id]');
-    for (let i = 0; i < hidden_list.length; i++) {
-        hidden_list[i].setAttribute("hidden", "");
-        hidden_list[i].setAttribute("disabled", "");
-    }
-    display_list = document.querySelectorAll('[data-sub_item_id="' + sub_item + '"]')
-    for (let i = 0; i < display_list.length; i++) {
-        display_list[i].removeAttribute("hidden");
-        display_list[i].removeAttribute("disabled");
-    }
+//     // 大品目の変更に応じて、選択可能な中品目を表示する
+//     hidden_list = document.querySelectorAll('[data-main_item_id]');
+//     for (let i = 0; i < hidden_list.length; i++) {
+//         hidden_list[i].setAttribute("hidden", "");
+//         hidden_list[i].setAttribute("disabled", "");
+//     }
+//     display_list = document.querySelectorAll('[data-main_item_id="' + main_item + '"]')
+//     for (let i = 0; i < display_list.length; i++) {
+//         display_list[i].removeAttribute("hidden");
+//         display_list[i].removeAttribute("disabled");
+//     }
 
-    // 中品目を変更した際に、対象外の品目選択をリセットする
-    item_selector.options[0].selected = true;
+//     // 大品目を変更した際に、対象外の品目選択をリセットする
+//     sub_item_selector.options[0].selected = true;
+//     let item_selector = document.getElementById('item');
+//     item_selector.options[0].selected = true;
 
-    // 旧処理。よく考えたら中品目を変更したらそれ以下の項目はすべて対象外になるはずなので不要
-    // let index = item_selector.selectedIndex;
-    // let i_sub_item = document.querySelectorAll('[data-sub_item_id]')[index].dataset.sub_item_id;
-    // console.log(i_sub_item);
-    // if (i_sub_item != sub_item) {
-    //     item_selector.options[0].selected = true;
-    // }
-}
+//     // 旧処理。よく考えたら大品目を変更したらそれ以下の項目はすべて対象外になるはずなので不要
+//     // let index = sub_item_selector.selectedIndex;
+//     // let s_main_item = document.querySelectorAll('[data-main_item_id]')[index].dataset.main_item_id;
+//     // console.log(s_main_item);
+//     // if (s_main_item != main_item) {
+//     //     sub_item_selector.options[0].selected = true;
+//     //     let item_selector = document.getElementById('item');
+//     //     item_selector.options[0].selected = true;
+//     // }
+// }
+
+// //中品目のプルダウンボタンが変更された際の処理
+// function CheckSelectedSubItem(obj) {
+//     let sub_item = obj.value;
+//     console.log(sub_item);
+//     let item_selector = document.getElementById('item');
+//     console.log(item_selector);
+
+
+//     // 中品目が選択された際に、中品目を選択可能にする
+//     if (sub_item >= 1) {
+//         item_selector.removeAttribute("disabled");
+//     }
+//     // else {
+//     //     console.log("else処理");
+//     //     item_selector.setAttribute("disabled", "disabled");
+//     // }
+
+//     // 中品目の変更に応じて、選択可能な品目を表示する
+//     hidden_list = document.querySelectorAll('[data-sub_item_id]');
+//     for (let i = 0; i < hidden_list.length; i++) {
+//         hidden_list[i].setAttribute("hidden", "");
+//         hidden_list[i].setAttribute("disabled", "");
+//     }
+//     display_list = document.querySelectorAll('[data-sub_item_id="' + sub_item + '"]')
+//     for (let i = 0; i < display_list.length; i++) {
+//         display_list[i].removeAttribute("hidden");
+//         display_list[i].removeAttribute("disabled");
+//     }
+
+//     // 中品目を変更した際に、対象外の品目選択をリセットする
+//     item_selector.options[0].selected = true;
+
+//     // 旧処理。よく考えたら中品目を変更したらそれ以下の項目はすべて対象外になるはずなので不要
+//     // let index = item_selector.selectedIndex;
+//     // let i_sub_item = document.querySelectorAll('[data-sub_item_id]')[index].dataset.sub_item_id;
+//     // console.log(i_sub_item);
+//     // if (i_sub_item != sub_item) {
+//     //     item_selector.options[0].selected = true;
+//     // }
+// }
 
 //店舗登録モーダルに関する処理
 

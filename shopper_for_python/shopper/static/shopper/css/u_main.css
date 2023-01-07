@@ -1,5 +1,14 @@
 @charset "UTF-8";
 
+/* 極小デバイス（縦向きモバイル, 576px 未満） */
+@media (max-width: 575.98px) {
+	input[type=checkbox] {
+		transform: scale(0.7);
+		margin-top: 0.1rem !important;
+		margin-left: -1.5rem !important;
+	}
+}
+
 ul {
 	padding-left: 0px;
 }

@@ -152,3 +152,23 @@ function activateExistingMailValidation(outline_id, input_id, form_id, button_id
 	}, false)
 }
 
+
+// フォーカスが外れた際にバリデーションし、フォーカスされたときにバリデーションを解除する
+// select2プラグインを使用した検索機能付きselect用
+function activateSelect2Validation(outline_id, form_id, button_id) {
+	let outline = document.getElementById(outline_id);
+	console.log(outline)
+	let input = document.querySelector('#' + outline_id + ' > span > span > span');
+	console.log(input)
+
+	input.addEventListener('focus', function () {
+		console.log('focus');
+		outline.classList.remove('was-validated');
+	}, false)
+
+	input.addEventListener('blur', function () {
+		console.log('blur');
+		outline.classList.add('was-validated');
+		toggleFormButton(form_id, button_id);
+	}, false)
+}
