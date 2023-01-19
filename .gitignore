@@ -1,2 +1,2 @@
 # 設定ファイルはローカルと本番で異なるのでアップしない
-/shopper_for_python/config/settings.py
+# /shopper_for_python/config/settings.py
