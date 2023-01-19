@@ -1,0 +1,40 @@
+/* @include media-breakpoint-up(sm) { */
+/* 極小デバイス（縦向きモバイル, 576px 未満） */
+@media (max-width: 575.98px) {
+
+    #navlink-use,
+    #navlink-register {
+        display: none;
+    }
+}
+
+
+#cover {
+    background: url("/static/shopper/img/top.jpg") center no-repeat;
+    background-size: cover;
+}
+
+#box {
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 2px solid rgb(219, 219, 219);
+    border-radius: 5px;
+}
+
+.trsp {
+    font-size: large;
+    font-weight: bold;
+    background-color: transparent;
+    border: 3px solid rgb(255, 255, 255);
+}
+
+.nav-item>a.btn {
+    width: 120px;
+}
+
+.nav-item>.tx {
+    font-weight: bold;
+}
+
+.navbar-brand {
+    font-size: 2rem;
+}

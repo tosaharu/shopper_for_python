@@ -1,0 +1,173 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+{% block extra_head %}
+  <title>会員情報変更</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="d-flex flex-column justify-content-center align-items-center mx-auto" style="width:100%;max-width:720px;">
+      <br>
+      <h2>会員情報変更</h2>
+      <form method="post" class="container my-4" id="main_form">
+        <h3 class="my-2">基本情報変更</h3>
+        <div class="form-outline mb-1" id="email_outline">
+          <label for="email" class="form-label">メールアドレス</label>
+          <input type="email" class="form-control" id="email" name="email" value="{{request.session.user.email}}" required="required" placeholder="abc12345@example.co.jp"/>
+          <div id="validationServerUsernameFeedback" class="invalid-feedback">有効なメールアドレスを入力してください</div>
+        </div>
+        <div class="form-outline mb-1" id="name_outline">
+          <label class="form-label" for="name">ユーザー名</label>
+          <input type="text" id="name" class="form-control" name="name" value="{{request.session.user.name}}" required="required" placeholder="ユーザー名"/>
+          <div id="validationServerUsernameFeedback" class="invalid-feedback">ユーザー名を入力してください</div>
+        </div>
+        <div class="row mb-1">
+          <div class="form-outline col-lg" id="gender_outline">
+            <label class="form-label" for="gender">性別</label>
+            <div id="gender">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="1" required="required" {%if request.session.user.gender == 1 %} checked="checked" {%endif%}>
+                <label class="form-check-label" for="male">
+                  男性
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="2" required="required" {%if request.session.user.gender == 2 %} checked="checked" {%endif%}>
+                <label class="form-check-label" for="female">
+                  女性
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="other" value="3" required="required" {%if request.session.user.gender == 3 %} checked="checked" {%endif%}>
+                <label class="form-check-label" for="other">
+                  回答しない
+                </label>
+              </div>
+              <div id="invalid-feedback-gender" class="invalid-feedback">性別を入力してください</div>
+            </div>
+          </div>
+          <div class="form-outline col-lg">
+            <label for="year-select" class="form-label">生年月日</label>
+            <div class="row">
+              <div class="col" id="year-select_outline">
+                <select id="year-select" class="form-select" name="year" required="required" onchange="CheckSelectedMonth()" aria-label="誕生年" disabled="disabled"></select>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback">年を入力してください</div>
+              </div>
+              <div class="col" id="month-select_outline">
+                <select id="month-select" class="form-select" name="month" required="required" onchange="CheckSelectedMonth()" aria-label="誕生月" disabled="disabled"></select>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback">月を入力してください</div>
+              </div>
+              <div class="col" id="day-select_outline">
+                <select id="day-select" class="form-select" name="day" required="required" aria-label="誕生日" disabled="disabled"></select>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback">日を入力してください</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label for="region" class="form-label">エリア選択</label>
+        <div class="row">
+          <div class="col" id="region_outline">
+            <select id="region" class="form-select" aria-label="Default select example" required="required">
+              <option value="">地方を選択してください</option>
+              {% for region in regions %}
+                <option value="{{region.id}}" {%if region.id == request.session.user.area.prefecture.region.id%} selected="selected" {%endif%}>
+                  {{region.name}}
+                </option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
+          </div>
+          <div class="col" id="prefecture_outline">
+            <select id="prefecture" class="form-select" aria-label="Default select example" required="required">
+              <option value="">都道府県を選択してください</option>
+              {% for prefecture in prefectures %}
+                <option data-region_id="{{prefecture.region}}" value="{{prefecture.id}}" {% if prefecture.id == request.session.user.area.prefecture.id %} selected="selected" {% endif %}>
+                  {{prefecture.name}}
+                </option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">都道府県を入力してください</div>
+          </div>
+          <div class="col" id="area_outline">
+            <select id="area" class="form-select" aria-label="Default select example" name="area" required="required">
+              <option value="">エリアを選択してください</option>
+              {% for selected_prefecture_area in selected_prefecture_areas %}
+                <option value="{{selected_prefecture_area.id}}" {% if selected_prefecture_area.id == request.session.user.area.id  %} selected="selected" {% endif %}>{{selected_prefecture_area.name}}</option>
+              {% endfor %}
+            </select>
+            <div id="validationServerUsernameFeedback" class="invalid-feedback">エリアを入力してください</div>
+          </div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <button type="button" id="subm1" class="btn btn-primary col-4" disabled="disabled" onclick="changeInfo()">変更する</button>
+        </div>
+      </form>
+
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+        <div id="changeInfoToast" class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <img src="" width="20" height="20" class="rounded me-2" alt="result"/>
+            <strong class="me-auto"></strong>
+            <small>たったいま</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+        <div id="changePassToast" class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <img src="" width="20" height="20" class="rounded me-2" alt="result"/>
+            <strong class="me-auto"></strong>
+            <small>たったいま</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+
+      <form class="container my-2" id="sub_form">
+        <h3 class="my-2">パスワード変更</h3>
+        <div class="form-outline mb-1" id="pass_outline">
+          <label class="form-label" for="password">現在のパスワード</label>
+          <input type="password" id="password" class="form-control" name="password" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
+          <div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードを入力してください</div>
+        </div>
+        <div class="form-outline mb-1" id="newpass_outline">
+          <label class="form-label" for="newpassword1">新しいパスワード</label>
+          <input type="password" id="newpassword1" class="form-control" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
+          <div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードを入力してください</div>
+        </div>
+        <div class="form-outline mb-1" id="newpass2_outline">
+          <label class="form-label" for="newpassword2">新しいパスワード（再入力）</label>
+          <input type="password" id="newpassword2" class="form-control" name="newpassword" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
+          <div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードが一致しません</div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <button type="button" id="subm2" class="btn btn-primary col-4" disabled="disabled" onclick="changePass()">変更する</button>
+        </div>
+      </form>
+
+      <form action="{% url 'u_Quit' %}" method="get" class="container my-2">
+        <h3 class="my-2">退会</h3>
+        <br>
+        <div class="row justify-content-center">
+          <button type="submit" class="btn btn-secondary col-4">退会手続きへ</button>
+        </div>
+      </form>
+      <div class="container my-3">
+        <div class="row justify-content-center">
+          <button type="button" class="btn btn-secondary col-4 mx-2" onclick="history.back(-1);return false;">戻る</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_JS %}
+  <script type="text/javascript" src="{% static 'shopper/js/area.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/birthday.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/changeinfo.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/validation.js' %}"></script>
+  <script type="text/javascript" src="{% static 'shopper/js/validation_forChangeInfo.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+{% block extra_head %}
+  <title>お問い合わせ完了</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container" style="max-width: 540px;">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <br>
+      <h2>お問い合わせ完了</h2>
+      <br>
+      <p class="text-center">このたびは貴重なご意見をありがとうございました。<br>
+      頂いたご意見をサービス改善につなげてまいります。<br>
+      今後ともよろしくお願いいたします。</p>
+      <br>
+      <a type="button" class="btn btn-outline-primary col-10" href="{% url 'u_Main' %}">メインへ</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

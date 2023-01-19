@@ -1,0 +1,59 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+{% block extra_head %}
+  <title>お問い合わせ</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container" style="max-width: 540px;">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <br>
+      <h2>お問い合わせ</h2>
+      <br>
+      <p>
+        いつもShopperをご利用いただきありがとうございます。<br>
+        <br>
+        Shopperはまだまだ発展途上のサービスです。<br>
+        是非とも皆さまの忌憚のないご意見をお聞かせください。<br>
+        皆さまにより一層ご満足いただけるよう、<br>
+        頂きましたご意見をもとにサービスを改善してまいります。
+      </p>
+      <br>
+      <h4>お問い合わせフォーム</h4>
+      <form action="{% url 'u_Inquiry' %}" method="post" id="main_form">
+        {% csrf_token %}
+        <div class="form-outline mb-1" id="type_outline">
+          <label for="type">お問い合わせ種別<span class="badge bg-danger mx-2">必須</span></label>
+          <select name="type" id="type" class="form-select" required>
+            <option value="">選択してください</option>
+            <option value="1">ご意見</option>
+            <option value="2">ご質問</option>
+            <option value="2">不具合</option>
+          </select>
+          <div class="invalid-feedback">種別を選択してください</div>
+        </div>
+        <div class="form-outline mb-1" id="text_outline">
+          <label for="text">本文<span class="badge bg-danger mx-2">必須</span></label>
+          <textarea id="text" name="text" class="form-control" rows="5" required></textarea>
+          <div class="invalid-feedback">テキストを入力してください</div>
+        </div>
+        <div class="form-outline mb-1" id="email_outline">
+          <label for="email">お問い合わせ先<span class="badge bg-secondary mx-2">任意</span></label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com">
+          <div id="store_name_help" class="form-text">※ご返信が必要な場合、記載のメールアドレスにご連絡させていただく場合がございます。</div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <button type="button" class="btn btn-secondary col-3 mx-2" onclick="history.back(-1);return false;">戻る</button>
+          <button type="submit" id="main_subm" class="btn btn-primary col-3 mx-2" disabled="disabled">送信</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_JS %}
+<script type="text/javascript" src="{% static 'shopper/js/validation.js' %}"></script>
+<script type="text/javascript" src="{% static 'shopper/js/validation_forInquiry.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,9 @@
+Django
+mysqlclient
+django[argon2]
+bcrypt
+requests
+beautifulsoup4
+libsass
+django-compressor
+django-sass-processor

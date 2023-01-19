@@ -1,0 +1,20 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+{% block extra_head %}
+  <title>セッションの有効期限切れ</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container" style="max-width: 540px;">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <br>
+      <h2>セッションの有効期限が切れました</h2>
+      <br>
+      <p>お手数ですが、最初の画面からやり直してください。</p>
+      <br>
+      <a type="button" class="btn btn-outline-primary col-10" href="{% url 'u_Login' %}">ログインへ</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

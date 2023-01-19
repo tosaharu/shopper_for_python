@@ -1,0 +1,127 @@
+/* 大デバイス（デスクトップ, 1200px 未満） */
+@media (min-width: 992px) {
+    html {
+        font-size: 1.0rem;
+    }
+}
+
+/* 中デバイス（タブレット, 992px 未満） */
+@media (max-width: 991.98px) {
+    html {
+        font-size: 1.0rem;
+    }
+}
+
+/* 小デバイス（横向きモバイル, 768px 未満） */
+@media (max-width: 767.98px) {
+    html {
+        font-size: 0.9rem;
+    }
+}
+
+/* @include media-breakpoint-up(sm) { */
+/* 極小デバイス（縦向きモバイル, 576px 未満） */
+@media (max-width: 575.98px) {
+    html {
+        font-size: 0.75rem;
+    }
+}
+
+.btn:not(.btn-shopper) {
+    max-width: 130px;
+}
+
+.navbar {
+    --bs-navbar-padding-y: 0.2rem;
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+}
+
+
+.nav-link__popup {
+    display: none;
+    min-width: 8rem;
+    text-align: left;
+    /* width: 6.5rem; */
+    position: absolute;
+    top: 3.3rem;
+    right: 1rem;
+    margin: 0;
+    padding: 0.3rem 0;
+    border: 1px solid #d2d2d2;
+    border-radius: 3px;
+    background-color: #fff;
+    list-style: none;
+}
+
+.nav-link__popup a {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    /* color: #212529; */
+    text-decoration: none;
+    white-space: nowrap;
+
+}
+
+@media (max-width: 575.98px) {
+    .nav-link__popup a {
+        font-size: larger;
+        padding: 0.8rem 1rem
+    }
+}
+
+.nav-link__popup li:hover {
+    color: #1e2125;
+    background-color: #e9ecef;
+}
+
+#user_btn:hover .nav-link__popup {
+    display: block;
+}
+
+
+.nav-link__popup:hover {
+    display: block;
+}
+
+#user_btn {
+    color: white;
+    line-height: 1.1;
+}
+
+#user_btn span {
+    color: whitesmoke;
+    font-size: 0.9rem;
+}
+
+.nav-link__popup::before {
+    right: 0.4rem;
+    position: absolute;
+    top: 0rem;
+    content: "";
+    background-color: #fff;
+    width: 0.8rem;
+    height: 0.4rem;
+    z-index: 2;
+    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+    transform: rotate(180deg);
+    transform-origin: center top;
+}
+
+.nav-link__popup::after {
+    right: 0.3rem;
+    position: absolute;
+    top: 0;
+    content: "";
+    background-color: #d2d2d2;
+    width: 1rem;
+    height: 0.5rem;
+    z-index: 1;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+    transform: rotate(180deg);
+    transform-origin: center top;
+}

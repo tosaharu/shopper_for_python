@@ -1,0 +1,45 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+
+{% comment %} <%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!-- リクエストスコープからエラーメッセージを受け取る -->
+<%
+String errorMessage = (String) request.getAttribute("errorMessage");
+%> {% endcomment %}
+
+{% block extra_head %}
+<title>ログイン</title>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 540px;">
+    <form action="{% url 'u_Login' %}" method="post" class="d-flex flex-column align-items-center">
+        <br>
+        <h2>ログイン</h2>
+        <br>
+        <!-- エラーメッセージが存在するときだけ表示する -->
+        {%if errorMessage != null%}
+        <div class="text-danger">
+            {{errorMessage}}
+        </div>
+        {% endif %}
+        <div>
+            {% csrf_token %}
+            <div class="form-outline mb-1">
+                <label for="email" class="form-label">メールアドレス</label> <input
+                    type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="form-outline mb-1">
+                <label class="form-label" for="password1">パスワード</label> <input
+                    type="password" id="password1" class="form-control" name="password" />
+            </div>
+        </div>
+        <br>
+        <a class="mb-1" href="{% url 'u_ResetPasswordAuth' %}">パスワードをお忘れの方はこちら</a>
+        <button type="submit" class="btn btn-primary col-10 mb-3">ログイン</button>
+        <a type="button" class="btn btn-outline-primary col-10" href="{% url 'u_RegisterUser' %}">新規会員登録</a>
+    </form>
+</div>
+{% endblock %}

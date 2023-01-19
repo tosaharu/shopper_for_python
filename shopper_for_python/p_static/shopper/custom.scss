@@ -1,0 +1,14 @@
+
+// オリジナルカラー設定
+
+// 色と名称の設定
+$shopper-header:#2E3A5F;
+
+// scss-docs-start theme-color-variables
+$shopper:          $shopper-header;
+// scss-docs-end theme-color-variables
+
+// variables > $theme-colors に$shopperを追加
+
+
+@import "bootstrap";

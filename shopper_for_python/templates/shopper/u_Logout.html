@@ -1,0 +1,19 @@
+{% extends 'shopper/base.html' %}
+{% load static%}
+
+{% block extra_head %}
+  <title>ログアウト</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container" style="max-width: 540px;">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <br>
+      <br>
+      <h2>ログアウトしました</h2>
+      <br>
+      <br>
+      <a type="button" class="btn btn-outline-primary col-10" href="{% url 'index' %}">トップへ</a>
+    </div>
+  </div>
+{% endblock %}

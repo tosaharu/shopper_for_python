@@ -1,0 +1,43 @@
+FROM mysql:8.0.3
+
+ENV MYSQL_ROOT_PASSWORD root
+ENV MYSQL_DATABASE shopper
+
+# ENV DB_CONNECTION=mysql
+# ENV DB_HOST=#0.0.0.0
+# ENV DB_PORT=3307
+
+# rootユーザー作成時には不要のようなのでいったん省略
+# ENV MYSQL_USER user
+# ENV MYSQL_PASSWORD user
+
+COPY ./dbconfig/my.conf /etc/mysql/conf.d/my.cnf
+
+# 以下実行コマンド
+
+# コンテナ作成
+# docker build -t docker-mysql-8-0-3:1 -f Dockerfile-8-0-3 .
+
+# コンテナ起動
+# docker run --name docker-mysql-8-0-3 -d -v $PWD/db-8-0-3:/var/lib/mysql -p 3307:3307 docker-mysql-8-0-3:1
+
+# コンテナにログイン
+# docker exec -it db bash
+
+# mysqlログイン
+# mysql -u root -p
+# root
+
+# sqlファイルをdump（hostの部分は、コンテナからローカルのアクセスが不明だったので、いったんローカルで実行して出力したファイルをGUI経由で使用）
+# mysqldump -u root -p -h localhost default-character-set=utf8 shopper > shopper.sql
+# mysqldump -u root -p -h localhost shopper > shopper.sql
+# 'DESKTOP-MCVAAT0'
+
+# sqlファイルをコンテナのtmpに格納
+# docker cp ./SJISshopper.sql docker-mysql-8-0-3:/tmp/
+
+# sqlファイル実行
+# mysql -u testuser -p test < tmp/{プロジェクト名 + 日付}.sql
+
+# ポート確認
+# show variables like 'port'

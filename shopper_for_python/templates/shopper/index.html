@@ -1,0 +1,95 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'shopper/css/bootstrap.css' %}" />
+    <!-- Index CSS -->
+    <link rel="stylesheet" href="{% static 'shopper/css/index.css' %}" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-sm navbar navbar-light position-absolute mx-1 w-100">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">Shopper</a>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item me-3" id="navlink-use">
+            <a type="button" class="btn tx" href="#how-to-use">使い方</a>
+          </li>
+          <li class="nav-item me-3" id="navlink-register">
+            <a type="button" class="btn btn-outline-dark" href="{% url 'u_RegisterUser' %}"><i class="fas fa-edit"></i> 会員登録</a>
+          </li>
+          <li class="nav-item me-3" id="navlink-login">
+            <a type="button" class="btn btn-outline-dark" href="{% url 'u_Login' %}"><i class="fas fa-unlock-alt"></i> ログイン</a>
+          </li>
+        </ul>
+    </div>
+  </nav>
+
+	<main>
+		<section id="cover" class="container d-flex align-items-center" style="height: 100vh;">
+      <div class="d-flex flex-column align-items-center mx-auto" style="width:100%;max-width:480px;">
+        <div id="box" class="container px-5 py-5 d-flex flex-column ">
+          <h1 class="mb-3">Shopper</h1>
+          <h4 class="my-3">お買い物情報を<br class="d-sm-none">ひとまとめに</h4>
+          <div class="mt-2">
+            <a type="button" class="btn btn-primary col-7" href="{% url 'u_RegisterUser' %}">無料会員登録</a>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+          <a type="button" class="btn btn-outline-light col trsp" href="#how-to-use">learn more &raquo;</a>
+        </div>
+			</div>
+		</section>
+    <section id="how-to-use" class="container d-flex align-items-center" >
+      <div class="d-flex flex-column align-items-center mx-auto my-4 my-sm-5" style="width:100%;max-width:1080px;">
+        <h2 class="mb-5">使い方</h2>
+        <div class="row" style="width:100%;">
+          <div class="mb-2 col-sm-4 d-flex flex-column align-items-center text-center">
+            <h5 class="mb-3 mb-sm-5">STEP1</h5>
+            <i class="far fa-address-card fa-3x mb-3"></i>
+            <p>1分でカンタン<br>
+            無料会員登録</p>
+          </div>
+          <div class="mb-2 col-sm-4 d-flex flex-column align-items-center text-center">
+            <h5 class="mb-3 mb-sm-5">STEP2</h5>
+            <i class="fas fa-shopping-bag fa-3x mb-3"></i>
+            <p>お店で見かけて気になった商品や<br>
+            購入した商品の情報を投稿</p>
+          </div>
+          <div class="mb-2 col-sm-4 d-flex flex-column align-items-center text-center">
+            <h5 class="mb-3 mb-sm-5">STEP3</h5>
+            <i class="fas fa-search-dollar fa-3x mb-3"></i>
+            <p>どこで何を買うのが安いかのリストが完成<br>
+            他の人が安く買っているお店もスグ分かる</p>
+          </div>
+
+        </div>
+        <div class="mt-2 mt-sm-5">
+          <a type="button" class="btn btn-primary col" href="{% url 'u_RegisterUser' %}">無料会員登録</a>
+        </div>
+      </div>
+    </section>
+
+	</main>
+  <footer class="footer">
+    <div class="container text-center">
+      <p class="text-muted">Copyright © 2022 tosaharu</p>
+    </div>
+  </footer>
+  <!-- Bootstrap -->
+  <script type="text/javascript" src="{% static 'shopper/js/bootstrap.js' %}"></script>
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</body>
+
+</html>
