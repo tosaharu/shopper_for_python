@@ -224,14 +224,14 @@ def display_categorized_product_lists(request, user_categorized_product_lists, o
                             html += '">'
                             html += other_categorized_product.store.name
                             html += '</a></div><div class="col-3 col-md-1 date card-text p-2">'
-                            html += str(user_categorized_product.date)
+                            html += str(other_categorized_product.date)
                             html += '</div><div class="col-2 col-md-1 card-text p-2">'
-                            if user_categorized_product.discount == 0:
+                            if other_categorized_product.discount == 0:
                                 html += '-'
                             else:
                                 html += '○'
                             html += '</div><div class="col-4 col-lg-2 card-text p-2">'
-                            html += user_categorized_product.comment
+                            html += other_categorized_product.comment
                             html += '</div><div class="col-2 col-lg-1 card-text p-2">'
                             html += other_categorized_product.user.name
                             html += '</div></div>'

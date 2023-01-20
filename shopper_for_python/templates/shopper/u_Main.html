@@ -18,10 +18,6 @@
       <h2>商品情報をチェック</h2>
       <div class="row justify-content-start my-4">
         <a type="button" class="btn btn-primary col-3 col-lg-2 mx-2" href="{% url 'u_RegisterProduct' %}"><i class="fas fa-edit"></i> 商品投稿</a>
-        {% comment %}のちのち機能追加予定 
-        <button type="button" class="btn btn-light col-3 mx-2" value="商品検索">検索する</button>
-        <button type="button" class="btn btn-light col-3 mx-2" onclick="location.href='/shopper/CouponListS'">クーポン</button>
-        {% endcomment %}
     
       </div>
 
@@ -31,9 +27,6 @@
           <button class="nav-link active" id="mylist-tab" data-bs-toggle="tab" data-bs-target="#mylist" type="button" role="tab" aria-controls="mylist" aria-selected="true">
             最安情報</button>
           <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">登録履歴</button>
-          {% comment %}後々機能追加予定
-          <button class="nav-link" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">お気に入り</button>
-          {% endcomment %}
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
@@ -192,7 +185,7 @@
                               </a>
                             </div>
                             <div class="col-3 col-md-1 date card-text p-2">{{other_categorized_product.date|date:"Y-m-d"}}</div>
-                            <div class="col-2 col-md-1 card-text p-2">{% if other_categorized_product.discount == 0 %}なし{% else %}あり{% endif %}</div>
+                            <div class="col-2 col-md-1 card-text p-2">{% if other_categorized_product.discount == 0 %}-{% else %}○{% endif %}</div>
                             <div class="col-4 col-lg-2 card-text p-2">{{other_categorized_product.comment}}</div>
                             <div class="col-2 col-lg-1 card-text p-2">{{other_categorized_product.user.name}}</div>
                           </div>
