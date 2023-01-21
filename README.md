@@ -28,8 +28,7 @@ URL: https://hasa.pythonanywhere.com/shopper/
   
 - バックエンド
 
-  - Python 3.11.0 
-  - Django 4.1.5
+  - Python 3.11.0 / Django 4.1.5
   
 - インフラ
 
@@ -40,9 +39,10 @@ URL: https://hasa.pythonanywhere.com/shopper/
 
   - Visual Studio Code
 
-※もともとJava 11(JavaEE,Eclipse)で作成したアプリケーションを、Python(Django)で作り直し機能改修したものです。  
-  Javaでも同等のアプリケーションを作成することが可能です。
- https://github.com/tosaharu/open
+※もともとJava 11(JavaEE,Eclipse)で作成したアプリケーションを、Python(Django)で作り直し機能改修しています。  
+　（無料のデプロイ先を使用したい、今後機械学習等のライブラリも使用してみたいという理由）  
+　Javaでも同等のアプリケーションを作成することが可能です。  
+　https://github.com/tosaharu/open
 
 ## 機能一覧
 
@@ -77,6 +77,10 @@ URL: https://hasa.pythonanywhere.com/shopper/
  - レスポンシブル対応
  
  - リアルタイムバリデーション
+
+## こだわった点
+
+※作成中※
 
 ## 画面イメージ
 
