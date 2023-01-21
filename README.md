@@ -104,5 +104,8 @@ URL: https://hasa.pythonanywhere.com/shopper/
 - お問い合わせ画面  
 <img src="https://user-images.githubusercontent.com/115526019/213860113-d010de5e-11f3-41ac-9e4d-ddb75b275bb2.png" alt="u_Inquiry_" width="50%">
 
-- ログイン画面  
-<img src="https://user-images.githubusercontent.com/115526019/213860122-c65697f5-fd4f-4588-b1e2-171ef3fc37bf.png" alt="u_Login_" width="50%">
+- ログイン/ログアウト画面  
+<img src="https://user-images.githubusercontent.com/115526019/213860122-c65697f5-fd4f-4588-b1e2-171ef3fc37bf.png" alt="u_Login_" width="50%"><img src="https://user-images.githubusercontent.com/115526019/213862690-df7c165e-6a99-4a1d-93ab-12edb0d149dd.png" alt="u_Logout_" width="50%">
+
+- パスワード再設定画面  
+<img src="https://user-images.githubusercontent.com/115526019/213863065-ee255a0d-8ce1-4e61-bf06-b1937d6a8135.png" alt="u_ResetPasswordAuth_" width="50%"><img src="https://user-images.githubusercontent.com/115526019/213863123-6717ede1-7e20-48a3-ba30-f5defde1faf9.jpg" alt="u_ResetPasswordAuth_ (1)" width="50%"><img src="https://user-images.githubusercontent.com/115526019/213862405-b3d8f23a-8a65-43c5-9a46-0c750c05aa36.png" alt="u_ResetPasswordAuth_ (2)" width="50%"><img src="https://user-images.githubusercontent.com/115526019/213862404-b74d3de9-0705-4058-ad06-3df782906288.png" alt="u_ResetPassword_" width="50%"><img src="https://user-images.githubusercontent.com/115526019/213863182-59bdecc2-1fb2-4622-9bab-5d13a4943866.jpg" alt="u_ResetPassword_ (1)" width="50%"><img src="https://user-images.githubusercontent.com/115526019/213862402-a16d44ee-9a3a-4068-8b9c-d4bc6fd6cba5.png" alt="u_ResetPassword_ (2)" width="50%">
