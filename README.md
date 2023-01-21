@@ -21,16 +21,48 @@ URL: https://hasa.pythonanywhere.com/shopper/
 
 ## 画面イメージ
 
-<br>
-<br>
-<br>
-<br>
+アプリトップ  
+![shopper_](https://user-images.githubusercontent.com/115526019/213859881-cc3512e4-c9fa-495e-8663-c9ec4dc51fd9.png)
+![shopper_ (1)](https://user-images.githubusercontent.com/115526019/213859898-fe99f0f1-0d92-4f4d-b32b-812c31c47626.png)
+新規会員登録画面  
+![u_RegisterUser_](https://user-images.githubusercontent.com/115526019/213859912-7f7f16df-a5a1-4b01-92ab-22bea7a7dc34.png)
+![u_RegisterUser_ (1)](https://user-images.githubusercontent.com/115526019/213859924-7c90020e-a9b5-40c6-98e8-5c2aea70ca8f.png)
+メイン画面  
+![u_Main_](https://user-images.githubusercontent.com/115526019/213859941-226a3185-2806-40b5-9b8c-7a19a622a82e.png)
+![u_Main_ (1)](https://user-images.githubusercontent.com/115526019/213859955-85b4144c-bd75-4dd9-bcc0-bda7c9cb7eb2.png)
+![u_Main_ (2)](https://user-images.githubusercontent.com/115526019/213859981-bd904c1b-4b9b-44f2-9844-3ac9d520def7.png)
+商品登録画面  
+![u_RegisterProduct_](https://user-images.githubusercontent.com/115526019/213859992-90ad3604-2c41-48dc-a7d9-a606798ae1c1.png)
+![u_RegisterProduct_ (1)](https://user-images.githubusercontent.com/115526019/213860005-bef0af68-3316-400f-8024-dce45a07972a.png)
+![u_RegisterProduct_ (2)](https://user-images.githubusercontent.com/115526019/213860004-6761c7db-76fc-4c05-9838-e126cbbebde2.png)
+![u_RegisterProduct_ (3)](https://user-images.githubusercontent.com/115526019/213860003-13d26feb-bd26-4899-b416-e6f69711810a.png)
+![u_RegisterProduct_ (4)](https://user-images.githubusercontent.com/115526019/213860001-b5fd2430-9742-4536-b5dd-fab941886355.png)
+店舗情報画面  
+![u_StoreInfo_7](https://user-images.githubusercontent.com/115526019/213860033-7d309b87-e80a-49c5-b0e1-b3842290e332.png)
+![u_StoreInfo_7 (1)](https://user-images.githubusercontent.com/115526019/213860039-0ca027de-d758-4a95-80dd-6e792ce16f13.png)
+会員情報画面  
+![u_ChangeInfo_](https://user-images.githubusercontent.com/115526019/213860048-a8476f8b-6ad8-4c61-997e-291528a4e97b.png)
+![u_ChangeInfo_ (1)](https://user-images.githubusercontent.com/115526019/213860050-acad55c4-8c98-436d-87de-9d002b6a5271.png)
+![u_ChangeInfo_ (2)](https://user-images.githubusercontent.com/115526019/213860056-857b39bf-2bd1-4597-8bd7-2a9c99244a4f.png)
+
+![u_ChangeInfo_ (3)](https://user-images.githubusercontent.com/115526019/213860065-407d0c5b-0f61-470e-85cb-6f20397568d5.png)
+退会画面  
+![u_Quit__](https://user-images.githubusercontent.com/115526019/213860082-0c20b2f1-128a-491c-a382-7d623ef8c5d7.png)
+![u_Quit_](https://user-images.githubusercontent.com/115526019/213860093-0f18e3ba-a923-4dee-b474-7e2f61665f9e.png)
+
+お問い合わせ画面  
+![u_Inquiry_](https://user-images.githubusercontent.com/115526019/213860113-d010de5e-11f3-41ac-9e4d-ddb75b275bb2.png)
+
+ログイン画面  
+![u_Login_](https://user-images.githubusercontent.com/115526019/213860122-c65697f5-fd4f-4588-b1e2-171ef3fc37bf.png)
+
 
 ## 使用技術
 
 - フロントエンド
 
   - Vanillajs
+
   - jQuery 3.6.0
   - HTML / CSS / SCSS / Bootstrap 5.0
   
@@ -48,8 +80,9 @@ URL: https://hasa.pythonanywhere.com/shopper/
 
   - Visual Studio Code
 
-※もともとJava(JavaEE)で作成したアプリケーションを、Python(Django)で作り直し機能改修したものです。  
-　Java.verはJava(JavaEE),Eclipseを使用していました。
+※もともとJava 11(JavaEE,Eclipse)で作成したアプリケーションを、Python(Django)で作り直し機能改修したものです。  
+  Javaでも同等のアプリケーションを作成することが可能です。
+ https://github.com/tosaharu/open
 
 ## 機能一覧
 
