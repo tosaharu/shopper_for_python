@@ -1,4 +1,4 @@
-# Shopper  
+# Shopper(Python)  
   
 β版リリース: 2023/1/19  
 開発期間: 1か月  
