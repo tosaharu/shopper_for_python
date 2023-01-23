@@ -3,7 +3,9 @@
 β版リリース: 2023/1/19  
 開発期間: 1か月  
 URL: https://hasa.pythonanywhere.com/shopper/  
-  
+ - サンプルアカウント
+   - メールアドレス：test@mail.com
+   - パスワード：TEst2023
   
 ## アプリ概要  
   
